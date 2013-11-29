@@ -1,8 +1,8 @@
-public class AIBase {
+public abstract class AIBase {
 	private KalahGame game;
 
-	public AIBase(KalahGame g) {
-		this.g = g;
+	public AIBase(KalahGame game) {
+		this.game = game;
 
 	}
 
