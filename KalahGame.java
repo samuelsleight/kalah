@@ -118,6 +118,75 @@ public class KalahGame {
 
 	}
 
+        public int playGame(AIBase firstAI, AIBase secondAI)
+        {
+	        boolean gameFinished = false; //OR IS IT?
+		int wonBy = 0;
+	        while(!gameFinished)
+		{
+		    int i = 0;
+		    firstAI.makeMove();
+		    for(i = 0; i < 6; i++)
+		    {
+			if(board[i] == 0)//is empty
+			{
+			    i++;
+			}
+		    }
+		    //check if game is finished
+		    if(i == 6) //player 1 out of seeds
+		    {
+			wonBy = 1;
+			gameFinished = true;
+		    }
+		    secondAI.makeMove();
+		    for(i = 7; i < 13; i++)
+		    {
+			if(board[i] == 0)//is empty
+			{
+			    i++;
+			}
+		    }
+		    //check if game is finished
+		    if(i == 13) //player 2 out of seeds
+		    {
+			wonBy = 2;
+			gameFinished = true;
+		    }
+		}
+		
+		//getting opponent's side seeds
+		if(wonBy == 1)
+		{
+		    for(int i = 7; i > 13; i++)
+		    {
+			board[6] += board[i];
+	            }
+		}
+		else //wonBy2
+		{
+		    for(int i = 0; i < 6; i++)
+		    {
+			board[13] += board[i];
+	            }
+		}
+		
+		if(board[6] > board[13]) //AI1 wins!
+		{
+		    return 1;
+		}
+		else if(board[13] > board[6])
+		{
+		    return 2;
+		}
+		else
+		{
+		    return 0;
+		}
+
+		
+        }
+
 	public String toString() {
 		String str = "";
 
