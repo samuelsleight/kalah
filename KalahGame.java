@@ -138,6 +138,7 @@ public class KalahGame {
 		    {
 			wonBy = 1;
 			gameFinished = true;
+			break;
 		    }
 		    secondAI.makeMove();
 		    for(i = 7; i < 13; i++)
