@@ -1,5 +1,5 @@
 public class AIBase {
-	private KalahGame game;
+	private KalahGame g;
 
 	public AIBase(KalahGame g) {
 		this.g = g;
