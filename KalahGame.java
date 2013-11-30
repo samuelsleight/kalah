@@ -11,15 +11,67 @@
  */
 public class KalahGame {
 	private int[] board;
-	private boolean player1;
+	private int playerToMove;
+
+	public static final int PLAYER_1 = 1;
+	public static final int PLAYER_2 = 2;
 
 	/**
 	 * Constructs a new KalahGame, initialising the board to 4 seeds per house.
 	 */
 	public KalahGame() {
 		board = new int[]{4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0};
-		player1 = true;
-
+		playerToMove = PLAYER_1;
+	}
+	
+	/**
+	Gets the legal moves a player can take
+	@param player The player (either 1 or 2)
+	@return The legal moves for that player
+	*/
+	public int[] getAllowedMoves(int player)
+	{
+		if(player != PLAYER_1 && player != PLAYER_2) {
+			throw new IllegalArgumentException("PlayerID is not valid: " + player);
+		}
+		
+		int offset = (player - 1) * 7;
+		
+		int size = 0;
+		
+		//get the number of legal moves
+		for (int i = offset; i < offset + 6; i++) {
+			if (board[i] > 0) {
+				size++;
+			}
+		}
+		
+		int[] moves = new int[size];
+		int index = 0;
+		
+		//add the moves to the array
+		for (int i = offset; i < offset + 6; i++) {
+			if (board[i] > 0) {
+				moves[index] = i;
+				index++;
+			}
+		}
+		
+		return moves;
+	}
+	
+	/**
+	Changes the turn to the other player
+	*/
+	public void changeTurn()
+	{
+		if (playerToMove == PLAYER_1) {
+			playerToMove = PLAYER_2;
+		} else if (playerToMove == PLAYER_2) {
+			playerToMove = PLAYER_1;
+		} else {
+			throw new IllegalArgumentException("PlayerID is not valid: " + playerToMove);
+		}
 	}
 
 	/**
@@ -41,7 +93,7 @@ public class KalahGame {
 
 		}
 
-		if(player1) {
+		if(playerToMove == PLAYER_1) {
 			if(n > 5) {
 				throw new IllegalArgumentException("Seed must be sown from player 1s side (0-6)");
 
@@ -62,17 +114,20 @@ public class KalahGame {
 			}
 
 			if(n != 6) {
-				player1 = false;
+				changeTurn();
 
 			}
 
 			if(n < 6 && board[n] == 1) {
-				board[6] += board[n];
-				board[6] += board[14 - n];
+				int opposite = 12 - n;
+				
+				if (board[opposite] > 0) {
+					board[6] += board[n];
+					board[6] += board[opposite];
 
-				board[n] = 0;
-				board[14 - n] = 0;
-
+					board[n] = 0;
+					board[opposite] = 0;
+				}
 			}
 
 		} else {
@@ -101,105 +156,104 @@ public class KalahGame {
 			}
 
 			if(n != 13) {
-				player1 = true;
+				changeTurn();
 
 			}
 
 			if(n > 6 && n < 13 && board[n] == 1) {
-				board[13] += board[n];
-				board[13] += board[14 - n];
+				int opposite = 12 - n;
+				
+				if (board[opposite] > 0) {
+					board[13] += board[n];
+					board[13] += board[opposite];
 
-				board[n] = 0;
-				board[14 - n] = 0;
-
+					board[n] = 0;
+					board[opposite] = 0;
+				}
 			}
 
 		}
 
 	}
-
-        public int playGame(AIBase firstAI, AIBase secondAI)
-        {
-	        boolean gameFinished = false; //OR IS IT?
-		int wonBy = 0;
-	        while(!gameFinished)
-		{
-		    int i = 0;
-		    firstAI.makeMove();
-		    for(i = 0; i < 6; i++)
-		    {
-			if(board[i] == 0)//is empty
-			{
-			    i++;
+	
+	/**
+	Performs a players move, and checks if the game has ended
+	@param player The player to move
+	@return Returns true if the game has ended, otherwise returns false
+	*/
+	public boolean move(AIBase player)
+	{
+		player.makeMove();
+		
+		int offset = (player.getPlayerID() - 1) * 7;
+		
+		boolean empty = true;
+		
+		// check if the board is empty
+		for (int i = 0; i < 6; i++) {
+			if (board[i + offset] > 0) {
+				empty = false;
 			}
-		    }
-		    //check if game is finished
-		    if(i == 6) //player 1 out of seeds
-		    {
-			wonBy = 1;
-			gameFinished = true;
-			break;
-		    }
-		    secondAI.makeMove();
-		    for(i = 7; i < 13; i++)
-		    {
-			if(board[i] == 0)//is empty
-			{
-			    i++;
-			}
-		    }
-		    //check if game is finished
-		    if(i == 13) //player 2 out of seeds
-		    {
-			wonBy = 2;
-			gameFinished = true;
-		    }
 		}
 		
-		//getting opponent's side seeds
-		if(wonBy == 1)
+		return empty;
+	}
+
+	public int playGame(AIBase firstAI, AIBase secondAI)
+	{
+		boolean gameFinished = false;
+	
+		//main loop
+		while(!gameFinished)
 		{
-		    for(int i = 7; i > 13; i++)
-		    {
+			if (playerToMove == PLAYER_1) {
+				gameFinished = move(firstAI);
+			} else {
+				gameFinished = move(secondAI);
+			}
+		}
+		
+		//add remaining pieces to the corresponding side
+		for (int i = 0; i < 6; i++) {
 			board[6] += board[i];
-	            }
+			board[i] = 0;
 		}
-		else //wonBy2
-		{
-		    for(int i = 0; i < 6; i++)
-		    {
+		for (int i = 7; i < 13; i++) {
 			board[13] += board[i];
-	            }
+			board[i] = 0;
 		}
 		
-		if(board[6] > board[13]) //AI1 wins!
-		{
-		    return 1;
+		if(board[6] > board[13]) {
+			return 1; //AI 1 wins
+		} else if(board[13] > board[6]) {
+			return 2; //AI 2 wins
+		} else {
+			return 0; //draw
 		}
-		else if(board[13] > board[6])
-		{
-		    return 2;
-		}
-		else
-		{
-		    return 0;
-		}
-
-		
-        }
+	}
 
 	public String toString() {
 		String str = "";
 
 		for(int i = 13; i > 6; i--) {
+			//add extra padding if necessary
+			if (board[i] < 10) {
+				str += " ";
+			}
+			
 			str += (board[i] + " ");
+		
 		}
 
-		str += "\n  ";
+		str += "\n   ";
 
 		for(int i = 0; i < 7; i++) {
+			//add extra padding if necessary
+			if (board[i] < 10) {
+				str += " ";
+			}
+			
 			str += (board[i] + " ");
-
 		}
 
 		return str;

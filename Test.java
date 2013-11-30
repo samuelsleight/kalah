@@ -1,55 +1,21 @@
 import java.util.Scanner;
 
 public class Test {
-	private Scanner s;
-
-	public Test() {
-		s = new Scanner(System.in);
-
-	}
-
-	public void run() {
-		KalahGame kg = new KalahGame();
-
-		while(true) {
-			System.out.println(kg);
-
-			System.out.println("Sow from which house? ");
-			int choice = getInt();
-
-			try {
-				kg.sow(choice);
-
-			} catch(IllegalArgumentException e) {
-				System.out.println(e.getMessage());
-
-			}
-
-		}
-
-	}
-
-	public int getInt() {
-		int choice = 0;
-
-		while(true) {
-			if(s.hasNextInt()) {
-				choice = s.nextInt(); s.nextLine();
-				return choice;
-
-			} else {
-				s.next();
-
-			}
-
-		}
-
-	}
-
 	public static void main(String[] args) {
-		Test t = new Test();
-		t.run();
+		KalahGame game = new KalahGame();
 
+		AIBase firstPlayer = new Player(game, KalahGame.PLAYER_1);
+		AIBase secondPlayer = new Player(game, KalahGame.PLAYER_2);
+		
+		int result = game.playGame(firstPlayer, secondPlayer);
+		
+		System.out.println("FINAL STATE");
+		System.out.println(game);
+		
+		switch (result) {
+			case 0: System.out.println("Draw");		break;
+			case 1: System.out.println("Player 1 Wins");	break;
+			case 2: System.out.println("Player 2 Wins");	break;
+		}
 	}
-
 }
