@@ -11,7 +11,7 @@
  */
 public class KalahGame {
 	private int[] board;
-	private int playerToMove;
+	private boolean player1ToMove;
 
 	public static final int PLAYER_1 = 1;
 	public static final int PLAYER_2 = 2;
@@ -21,7 +21,7 @@ public class KalahGame {
 	 */
 	public KalahGame() {
 		board = new int[]{4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0};
-		playerToMove = PLAYER_1;
+		player1ToMove = true;
 	}
 	
 	/**
@@ -65,13 +65,7 @@ public class KalahGame {
 	*/
 	public void changeTurn()
 	{
-		if (playerToMove == PLAYER_1) {
-			playerToMove = PLAYER_2;
-		} else if (playerToMove == PLAYER_2) {
-			playerToMove = PLAYER_1;
-		} else {
-			throw new IllegalArgumentException("PlayerID is not valid: " + playerToMove);
-		}
+		player1ToMove = !player1ToMove;
 	}
 
 	/**
@@ -93,7 +87,7 @@ public class KalahGame {
 
 		}
 
-		if(playerToMove == PLAYER_1) {
+		if(player1ToMove) {
 			if(n > 5) {
 				throw new IllegalArgumentException("Seed must be sown from player 1s side (0-6)");
 
@@ -206,7 +200,7 @@ public class KalahGame {
 		//main loop
 		while(!gameFinished)
 		{
-			if (playerToMove == PLAYER_1) {
+			if (player1ToMove) {
 				gameFinished = move(firstAI);
 			} else {
 				gameFinished = move(secondAI);
