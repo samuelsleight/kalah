@@ -4,7 +4,7 @@ import java.util.Scanner;
 A simple class that allows us to play the game against the AI (or another player)
 */
 public class Player extends AIBase {
-	private Scanner s;
+	private Scanner s;//poop
 	
 	
 	/**
@@ -14,7 +14,7 @@ public class Player extends AIBase {
 	*/
 	public Player(KalahGame game, int playerID) {
 		super(game, playerID);
-		
+		//:D
 		s = new Scanner(System.in);
 	}
 
@@ -30,7 +30,7 @@ public class Player extends AIBase {
 				s.next();
 			}
 		}
-	}
+	} //spaghetti and meatballs
 	
 	private boolean isValid(int move, int[] allowed)
 	{
@@ -46,7 +46,7 @@ public class Player extends AIBase {
 	public void makeMove()
 	{
 		System.out.println(game);
-		
+		//p/p
 		int[] allowed = getAllowedMoves();
 		
 		int move;
