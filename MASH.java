@@ -1,5 +1,5 @@
 
-public class SAAI extends AIBase
+public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heuristic Algorithm
 {
 	private int currentState;
 
