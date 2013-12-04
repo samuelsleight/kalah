@@ -3,7 +3,7 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 {
 	private int currentState;
 
-	SAII(KalahGame g, int playerID)
+	MASH(KalahGame g, int playerID)
 	{
 		super(g, playerID);
 		
@@ -12,6 +12,11 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 	public void makeMove()
 	{
 		//dostuff
+		
+	}
+
+	private void createTree()
+	{
 		
 	}
 
