@@ -17,6 +17,8 @@ We based our algorithm largely on the M&N algorithm - an improement on the mini-
 
 We found a PDF on the M&N algorithm here - http://dl.acm.org/citation.cfm?id=362054 and though it was originally written in Common Lisp, we took the ideas of the M&N algorithm, namely that a min-max algorithm should pick from a few options and take into account relative uncertainty (especially considering the fact that algorithms for this task are designed to learn) - therefore we can't be certain as to whether the opposing AI will modify their moves using what they've learnt (potentially from how our AI plays) from the last game(s).
 
+We also took some inspiration from Artificial Intelligence: A Modern Approach, pages 480 - 483, and applied its comments on reasoning under uncertainty to our implementation of the M&N algorithm. We felt it would be prudent, when against any decent learning algorithm, to consider uncertainty when we are unsure, indeed, what move the opposing AI will choose, and whether they will have adapted their efforts from last time.
+
 ** Analysis of Behaviour
 
 We expected our algorithm to,
