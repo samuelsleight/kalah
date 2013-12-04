@@ -2,10 +2,21 @@
 
 The basic game structure is that the game is represented in an integer array. Positions 0 - 5 represent the top row of houses, position 6 represents the first player's store. Positions 7-12 represent the bottom row of houses, and position 13 represents the second player's store.
 
+We had both of our AI extend a class called AIBase, which get passed into the playGame method when they play the game. The AI individually have a method called makeMove, which will implement their algoririthm and will call the "sow" method of the KalahGame class, which will in turn modify the state of the board, ready for the next AI's move.
+
+After constructing the infrastructure of the game and whatnot, including the base AI class and all of the plumbing for making sure everything connects properly, we went off into our subgroups and made out individual AI which extend the abstract AIBase class. Needless to say, the methods (such as playGame) take an object of type AIBase, which meant we could do all of the game together before we'd made our AI, utilising abstract classes.
+
+We used GitHub as version control. The repository can be found here - https://github.com/YeyaSwizaw/kalah. We found this was the easiest way to collaborate as a group to create coherent code that meshed well with each other, even despite it not being coded all by one person. This is a lot more efficient and sensible than simply having a dropbox folder, we found, as it's less fiddling around.
+
 The results of our 1000 games were -
 
-AI 1 - Helen & Amar's -
-AI 2 - Sam & Andrew's - 
+AI 1 - Helen & Amar's - X/1000 wins
+
+AI 2 - Sam & Andrew's - X/1000 wins
+
+* TODO Something Algorithm - By Helen and Amar
+
+Put stuff here!
 
 * MASH Algorithm - By Sam and Andrew
 
@@ -17,10 +28,11 @@ We based our algorithm largely on the M&N algorithm - an improement on the mini-
 
 We found a PDF on the M&N algorithm here - http://dl.acm.org/citation.cfm?id=362054 and though it was originally written in Common Lisp, we took the ideas of the M&N algorithm, namely that a min-max algorithm should pick from a few options and take into account relative uncertainty (especially considering the fact that algorithms for this task are designed to learn) - therefore we can't be certain as to whether the opposing AI will modify their moves using what they've learnt (potentially from how our AI plays) from the last game(s).
 
-We also took some inspiration from Artificial Intelligence: A Modern Approach, pages 480 - 483, and applied its comments on reasoning under uncertainty to our implementation of the M&N algorithm. We felt it would be prudent, when against any decent learning algorithm, to consider uncertainty when we are unsure, indeed, what move the opposing AI will choose, and whether they will have adapted their efforts from last time.
+We also took some inspiration from Artificial Intelligence: A Modern Approach, for example, pages 480 - 483, and applied its comments on reasoning under uncertainty to our implementation of the M&N algorithm. We felt it would be prudent, when against any decent learning algorithm, to consider uncertainty when we are unsure, indeed, what move the opposing AI will choose, and whether they will have adapted their efforts from last time.
 
 ** Analysis of Behaviour
 
 We expected our algorithm to,
 
 Our algorithm
+
