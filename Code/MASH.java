@@ -9,10 +9,10 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 		
 	}
 
-	public void makeMove()
+	public int makeMove()
 	{
 		//dostuff
-		
+		return 0;
 	}
 
 	private void createTree()

@@ -8,7 +8,7 @@ public abstract class AIBase {
 
 	}
 
-	abstract void makeMove();
+	abstract int makeMove();
 	
 	/**
 	Gets the legal moves a player can take

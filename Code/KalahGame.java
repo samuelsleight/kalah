@@ -76,7 +76,7 @@ public class KalahGame {
 	 * @throws IllegalArgumentException if n is a store, on the wrong side of
 	 * the board, or empty.
 	 */
-	public void sow(int n) {
+	private void sow(int n) {
 		if(n == 6 || n == 13) {
 			throw new IllegalArgumentException("Cannot sow seed from store (6 or 13)");
 
@@ -177,7 +177,7 @@ public class KalahGame {
 	*/
 	public boolean move(AIBase player)
 	{
-		player.makeMove();
+		sow(player.makeMove());
 		
 		int offset = (player.getPlayerID() - 1) * 7;
 		
