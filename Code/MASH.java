@@ -37,6 +37,11 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 		return tree; //yes, yes, a *real* tree needs to be made
 	}
 
+	private int addStochasticness() //can call elsewhere for bonus points, and as we know, points equate directly to prizes
+	{
+		return (int)(Math.random()*6); //can weight a certain house randomly
+	}
+
 	private void parseTree() //for useful information
 	{
 		
