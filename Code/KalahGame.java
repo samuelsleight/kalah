@@ -60,6 +60,15 @@ public class KalahGame {
 		return moves;
 	}
 	
+	public int getTurn()
+	{
+		if (player1ToMove) {
+			return PLAYER_1;
+		} else {
+			return PLAYER_2;
+		}
+	}
+	
 	/**
 	Changes the turn to the other player
 	*/
@@ -179,18 +188,30 @@ public class KalahGame {
 	{
 		sow(player.makeMove());
 		
-		int offset = (player.getPlayerID() - 1) * 7;
-		
 		boolean empty = true;
 		
-		// check if the board is empty
+		// check if any sides are empty
 		for (int i = 0; i < 6; i++) {
-			if (board[i + offset] > 0) {
+			if (board[i] > 0) {
 				empty = false;
 			}
 		}
+		if (empty) {
+			return true;
+		}
 		
-		return empty;
+		empty = true;
+		
+		for (int i = 7; i < 13; i++) {
+			if (board[i] > 0) {
+				empty = false;
+			}
+		}
+		if (empty) {
+			return true;
+		}
+		
+		return false;
 	}
 
 	public int playGame(AIBase firstAI, AIBase secondAI)
@@ -200,6 +221,9 @@ public class KalahGame {
 		//main loop
 		while(!gameFinished)
 		{
+			//System.out.println("Player: " + getTurn());
+			//System.out.println(this);
+			
 			if (player1ToMove) {
 				gameFinished = move(firstAI);
 			} else {
