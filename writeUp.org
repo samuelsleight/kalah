@@ -1,3 +1,7 @@
+#+TITLE: Intro to AI End of Term Assignment
+#+AUTHOR: Andrew Hynes, Samuel Sleight, Helen Cheung, Amar Saggu
+#+DATE: 2013-12-13
+
 * Overview of the Program
 
 The basic game structure is that the game is represented in an integer array. Positions 0 - 5 represent the top row of houses, position 6 represents the first player's store. Positions 7-12 represent the bottom row of houses, and position 13 represents the second player's store.
