@@ -9,6 +9,9 @@ public abstract class AIBase {
 	}
 
 	abstract int makeMove();
+
+	abstract void win();
+	abstract void lose();
 	
 	/**
 	Gets the legal moves a player can take
@@ -23,4 +26,10 @@ public abstract class AIBase {
 	{
 		return playerID;
 	}
+
+	public void setPlayerID(int id)
+	{
+		playerID = id;
+	}
+
 }

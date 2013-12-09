@@ -6,7 +6,6 @@ A simple class that allows us to play the game against the AI (or another player
 public class Player extends AIBase {
 	private Scanner s;
 	
-	
 	/**
 	Creates the Player
 	@param game The game the player will be playing
@@ -17,6 +16,9 @@ public class Player extends AIBase {
 		
 		s = new Scanner(System.in);
 	}
+
+	public void win() { }
+	public void lose() { }
 
 	private int getInt() {
 		int choice = 0;

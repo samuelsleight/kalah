@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Random;
@@ -5,15 +6,44 @@ import java.util.Random;
 public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heuristic Algorithm
 {
 	private Map<GameState, ProbArray> memory;
+	private ArrayList<CrappyPair> currentGame;
 	private Random r;
+
+	//TODO - 
+	//searchy bit
+	//heuristics vvvvvv
+	//bonus move
+	//move that puts least pieces in opponent's side
+	//piping
+
+	private static final double PROB_DELTA = 0.2;
 
 	MASH(KalahGame g, int playerID)
 	{
 		super(g, playerID);
 
 		memory = new HashMap<GameState, ProbArray>();
+		currentGame = new ArrayList<CrappyPair>();
 		r = new Random();
 		
+	}
+
+	public void win() {
+		for(CrappyPair p : currentGame) {
+			memory.get(p.state).updateProbability(p.choice, PROB_DELTA);
+		}
+
+		currentGame.clear(); 
+
+	}
+
+	public void lose() {
+		for(CrappyPair p : currentGame) {
+			memory.get(p.state).updateProbability(p.choice, -PROB_DELTA);
+		}
+
+		currentGame.clear(); 
+
 	}
 
 	public int makeMove()
@@ -42,6 +72,7 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 			}
 		}
 
+		currentGame.add(new CrappyPair(s, i));
 		return moves[i];
 	}
 
@@ -108,6 +139,34 @@ private class ProbArray {
 		return probs[i];
 
 	}
+
+	public void updateProbability(int i, double d) {
+		probs[i] += d;
+
+		double total = 0;
+		for(double p : probs) {
+			total += p;
+
+		}
+
+		double factor = 1.0 / total;
+		for(int j = 0; j < probs.length; j++) {
+			probs[j] *= factor;
+
+		}
+
+	}
+}
+
+private class CrappyPair {
+	public GameState state;
+	public int choice;
+
+	public CrappyPair(GameState state, int choice) {
+		this.state = state;
+		this.choice = choice;
+	}
+
 }
 
 }

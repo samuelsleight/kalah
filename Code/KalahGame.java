@@ -20,9 +20,15 @@ public class KalahGame {
 	 * Constructs a new KalahGame, initialising the board to 4 seeds per house.
 	 */
 	public KalahGame() {
+		reset();
+	}
+
+	public void reset() {
 		board = new int[]{4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0};
 		player1ToMove = true;
+
 	}
+
 	
 	/**
 	Gets the legal moves a player can take
