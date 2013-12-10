@@ -81,6 +81,67 @@ public class KalahGame {
 		return moves;
 	}
 	
+	/**
+	 * Returns an ArrayList of the possible move sequences a player can make on a turn.
+	 * */
+	public ArrayList<int[]> getAllowedMoveSequences(int player)
+	{
+		int[] moves = getAllowedMoves(player);
+		
+		ArrayList<int[]> frontier = new ArrayList<int[]>();
+		ArrayList<int[]> finale = new ArrayList<int[]>();
+		
+		for (int i = 0; i < moves.length; i++) {
+			KalahGame next = getState(moves[i]);
+			
+			int[] move = {moves[i]};
+			
+			if (next.getTurn() != player) {
+				finale.add(move);
+			} else {
+				frontier.add(move);
+			}
+		}
+		
+		while (!frontier.isEmpty()) {
+			ArrayList<int[]> newFrontier = new ArrayList<int[]>();
+			
+			for (int i = 0; i < frontier.size(); i++) {
+				int[] moveSeq = frontier.get(i);
+				
+				KalahGame cur = getState(moveSeq);
+				
+				moves = cur.getAllowedMoves(player);
+				
+				if (moves.length == 0) {
+					finale.add(moveSeq);
+				}
+				
+				for (int moveNum = 0; moveNum < moves.length; moveNum++) {
+					KalahGame next = cur.getState(moves[moveNum]);
+					
+					int[] newMoveSeq = new int[moveSeq.length + 1];
+				
+					for (int n = 0; n < moveSeq.length; n++) {
+						newMoveSeq[n] = moveSeq[n];
+					}
+			
+					newMoveSeq[moveSeq.length] = moves[moveNum];
+						
+					if (next.getTurn() != player) {
+						finale.add(newMoveSeq);
+					} else {
+						newFrontier.add(newMoveSeq);
+					}
+				}
+			}
+			
+			frontier = newFrontier;
+		}
+		
+		return finale;
+	}
+	
 	public int getTurn()
 	{
 		if (player1ToMove) {
