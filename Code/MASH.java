@@ -94,23 +94,29 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 			for(int i = 0; i < game.getAllowedMoves().length; i++)
 			{
 				//sow
-
-				if(true) //option is good continue searching - this is where we check by heuristic
-				{
-					//recursive call (?)
-				}
-				else
-				{
-					//set game back to current state
-				}
 			}
 
 		}//do pruning (via stricter heuristic?) here
+
+		/*
+		//for(int i = 0; tree width at current depth
+		{
+			if(i.getData() < 0)
+			{
+				//prune
+			}
+		}
+		*/
 
 		else
 		{
 			return tree; //yes, yes, a *real* tree needs to be made
 		}
+	}
+
+	private int heuristic(int gainedSeeds, int enemyGainedSeeds)
+	{
+		return gainedSeeds - enemyGainedSeeds;
 	}
 
 	private int addStochasticness() //can call elsewhere for bonus points, and as we know, points equate directly to prizes
