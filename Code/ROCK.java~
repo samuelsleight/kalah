@@ -104,7 +104,7 @@ public class ROCK extends AIBase
 		return toMove.remove(0);
 	}
 	
-	private void addToPrevTree()
+	private addToPrevTree()
 	{
 		
 	}
