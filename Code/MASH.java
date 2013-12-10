@@ -52,7 +52,7 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 		GameState s = new GameState(moves, getPlayerID());
 		if(!(memory.containsKey(s))) {
 			double[] probs = new double[moves.length];
-			for(int i = 0; i++ < moves.length;) 
+			for(int i = 0; i < moves.length; i++) 
 			{
 				probs[i] = 1.0 / (double)(moves.length);
 			}
@@ -64,7 +64,7 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 		double val = r.nextDouble();
 		double accum = 0;
 		int i = 0;
-		for(; i++ < probs.getSize() ;) //This looks so stupidly awesome ;)
+		for(; i < probs.getSize() ; i++) //This looks so stupidly awesome ;)
 		{
 			accum += probs.get(i);
 			if(val < accum) 
