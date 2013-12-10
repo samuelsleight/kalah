@@ -1,18 +1,22 @@
 import java.util.ArrayList;
 
+// REKT
 public class ROCK extends AIBase
 {
 	ArrayList<Integer> toMove;
+// REKT
 	
 	public ROCK(KalahGame game, int playerID)
 	{
 		super(game, playerID);
+// REKT
 		
 		toMove = new ArrayList<Integer>();
 		
 		moo = 0;
 	}
 	
+// REKT
 	private ArrayList<int[]> getMoves(KalahGame start, int player)
 	{
 		int[] moves = start.getAllowedMoves(player);
@@ -22,6 +26,7 @@ public class ROCK extends AIBase
 		
 		for (int i = 0; i < moves.length; i++) {
 			KalahGame next = start.getState(moves[i]);
+// REKT
 			
 			int[] move = {moves[i]};
 			
@@ -31,6 +36,7 @@ public class ROCK extends AIBase
 				frontier.add(move);
 			}
 		}
+// REKT
 		
 		while (!frontier.isEmpty()) {
 			ArrayList<int[]> newFrontier = new ArrayList<int[]>();
@@ -48,6 +54,7 @@ public class ROCK extends AIBase
 				
 				for (int moveNum = 0; moveNum < moves.length; moveNum++) {
 					KalahGame next = cur.getState(moves[moveNum]);
+// REKT
 					
 					int[] newMoveSeq = new int[moveSeq.length + 1];
 				
@@ -64,6 +71,7 @@ public class ROCK extends AIBase
 					}
 				}
 			}
+// REKT
 			
 			frontier = newFrontier;
 		}
@@ -80,6 +88,7 @@ public class ROCK extends AIBase
 			return cur.getSeeds(6) - cur.getSeeds(13);
 		} else {
 			return cur.getSeeds(13) - cur.getSeeds(6);
+// REKT
 		}
 	}
 
