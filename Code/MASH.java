@@ -17,8 +17,8 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 	//move that puts most in your pit - in their pit
 	//piping
 
-	private static final double PROB_DELTA = 0.2;
-	private static final double TREE_DEPTH = 6;
+	private static final double PROB_DELTA = 0.25;
+	private static final double TREE_DEPTH = 7;
 
 	MASH(KalahGame g, int playerID)
 	{
@@ -69,12 +69,14 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 			});
 
 			double[] probs = new double[hvals.size()];
-			probs[hvals.get(0).i1] = (double)(hvals.get(0).i2 ^ 3);
+			probs[hvals.get(0).i1] = (double)(hvals.get(0).i2 ^ 2);
 
-			for(int i = 1; i < hvals.size(); i++) {
+			for(int i = 1; i < hvals.size() - 1; i++) {
 				probs[hvals.get(i).i1] = (double)(hvals.get(i).i2);
 
 			}
+
+			probs[hvals.get(hvals.size() - 1).i1] = Math.sqrt((double)(hvals.get(hvals.size() - 1).i2));
 
 			memory.put(s, new ProbArray(probs));
 		}
@@ -92,6 +94,7 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 			}
 		}
 
+		i = (i >= moves.length ? i - 1 : i);
 		currentGame.add(new CrappyPair(s, i));
 		return moves[i];
 	}
@@ -102,13 +105,10 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 		{
 			int[] moves = parentGame.getData().getAllowedMoves(parentGame.getData().getTurn());
 
-			Tree tree = new Tree(null, 1);
+			//Tree<KalahGame> tree = new Tree<KalahGame>(null, 1);
 			for(int i = 0; i < moves.length; i++)
 			{
 				createTree(num + 1, new Tree<KalahGame>(parentGame, parentGame.getData().getState(moves[i])));
-				//  \\ //  \\
-			     /*	\\ O// \\O // */
-
 
 			}
 
@@ -134,10 +134,10 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 	private int heuristic(KalahGame g)
 	{
 		if(getPlayerID() == KalahGame.PLAYER_1) {
-			return (g.getSeeds(6) - game.getSeeds(6)) - (g.getSeeds(13) - game.getSeeds(13));
+			return g.getSeeds(6) - g.getSeeds(13);
 
 		} else {
-			return (g.getSeeds(13) - game.getSeeds(13)) - (g.getSeeds(6) - game.getSeeds(6));
+			return g.getSeeds(13) - g.getSeeds(6);
 
 		}
 

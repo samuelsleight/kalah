@@ -142,6 +142,16 @@ public class KalahGame {
 		return finale;
 	}
 	
+	public int getStartingPlayerID()
+	{
+		return player1Started ? PLAYER_1 : PLAYER_2;
+	}
+	
+	public ArrayList<Move> getPreviousMoves()
+	{
+		return prevMoves;
+	}
+
 	public int getTurn()
 	{
 		if (player1ToMove) {
