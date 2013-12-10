@@ -17,8 +17,8 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 	//move that puts most in your pit - in their pit
 	//piping
 
-	private static final double PROB_DELTA = 0.25;
-	private static final double TREE_DEPTH = 7;
+	private static final double PROB_DELTA = 1;
+	private static final double TREE_DEPTH = 6;
 
 	MASH(KalahGame g, int playerID)
 	{
@@ -69,7 +69,7 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 			});
 
 			double[] probs = new double[hvals.size()];
-			probs[hvals.get(0).i1] = (double)(hvals.get(0).i2 ^ 2);
+			probs[hvals.get(0).i1] = (double)(hvals.get(0).i2 ^ 3);
 
 			for(int i = 1; i < hvals.size() - 1; i++) {
 				probs[hvals.get(i).i1] = (double)(hvals.get(i).i2);
@@ -96,6 +96,13 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 
 		i = (i >= moves.length ? i - 1 : i);
 		currentGame.add(new CrappyPair(s, i));
+		
+		for(int k = 0; k < probs.getSize(); k++)
+		{
+			System.out.print(probs.get(k) + ";");
+		}
+		System.out.println("");
+		
 		return moves[i];
 	}
 
