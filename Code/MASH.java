@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heuristic Algorithm
 {
@@ -16,6 +18,7 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 	//piping
 
 	private static final double PROB_DELTA = 0.2;
+	private static final double TREE_DEPTH = 6;
 
 	MASH(KalahGame g, int playerID)
 	{
@@ -50,10 +53,27 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 		int[] moves = game.getAllowedMoves(getPlayerID());
 		GameState s = new GameState(moves, getPlayerID());
 		if(!(memory.containsKey(s))) {
-			double[] probs = new double[moves.length];
-			for(int i = 0; i < moves.length; i++) 
-			{
-				probs[i] = 1.0 / (double)(moves.length);
+			Tree<KalahGame> t = new Tree<KalahGame>(null, game);
+			createTree(0, t);
+
+			ArrayList<IntPair> hvals = new ArrayList<IntPair>();
+			for(int i = 0; i < t.getChildren().size(); i++) {
+				hvals.add(new IntPair(i, calculateHeuristic(t.getChildren().get(i))));
+			}
+
+			Collections.sort(hvals, new Comparator<IntPair>() {
+				public int compare(IntPair p1, IntPair p2) {
+					return p1.compareTo(p2);
+
+				}
+			});
+
+			double[] probs = new double[hvals.size()];
+			probs[hvals.get(0).i1] = (double)(hvals.get(0).i2 ^ 3);
+
+			for(int i = 1; i < hvals.size(); i++) {
+				probs[hvals.get(i).i1] = (double)(hvals.get(i).i2);
+
 			}
 
 			memory.put(s, new ProbArray(probs));
@@ -76,47 +96,51 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 		return moves[i];
 	}
 
-	private Tree<KalahGame> createTree(int num, Tree<KalahGame> parentGame) //depth of ~5 to keep it manageable
+	private void createTree(int num, Tree<KalahGame> parentGame) //depth of ~5 to keep it manageable
 	{
-		Tree tree = new Tree(null, 1);
-		if(num < 6) //depth
+		if(num < TREE_DEPTH) //depth
 		{
-			//TODO - give getData player ID
-			//int[] moves = parentGame.getData().getAllowedMoves();
+			int[] moves = parentGame.getData().getAllowedMoves(parentGame.getData().getTurn());
+
 			Tree tree = new Tree(null, 1);
 			for(int i = 0; i < moves.length; i++)
 			{
-				KalahGame newState = parentGame.getData().getState(moves[i]);
-				Tree<KalahGame> t = new Tree<KalahGame>(parentGame, newState);
+				createTree(num + 1, new Tree<KalahGame>(parentGame, parentGame.getData().getState(moves[i])));
+				//  \\ //  \\
+			     /*	\\ O// \\O // */
+
 
 			}
 
-			for(int i = 0; i < game.getAllowedMoves().length; i++)
-			{
-				//sow
-			}
-
-		}//do pruning (via stricter heuristic?) here
-
-		/*
-		//for(int i = 0; tree width at current depth
-		{
-			if(i.getData() < 0)
-			{
-				//prune
-			}
 		}
-		*/
 
-		else
-		{
-			return tree; //yes, yes, a *real* tree needs to be made
+	}
+
+	private int calculateHeuristic(Tree<KalahGame> tree) {
+		if(tree.getChildren().isEmpty()) {
+			return heuristic(tree.getData());
+
+		} else {
+			int currMax = 0;
+			for(int i = 0; i < tree.getChildren().size(); i++) {
+				currMax = Math.max(currMax, calculateHeuristic(tree.getChildren().get(i)));
+
+			}
+
+			return currMax;
 		}
 	}
 
-	private int heuristic(int gainedSeeds, int enemyGainedSeeds)
+	private int heuristic(KalahGame g)
 	{
-		return gainedSeeds - enemyGainedSeeds;
+		if(getPlayerID() == KalahGame.PLAYER_1) {
+			return (g.getSeeds(6) - game.getSeeds(6)) - (g.getSeeds(13) - game.getSeeds(13));
+
+		} else {
+			return (g.getSeeds(13) - game.getSeeds(13)) - (g.getSeeds(6) - game.getSeeds(6));
+
+		}
+
 	}
 
 	private int addStochasticness() //can call elsewhere for bonus points, and as we know, points equate directly to prizes
@@ -149,6 +173,8 @@ private class ProbArray {
 	public ProbArray(double[] probs) {
 		this.probs = probs;
 
+		normalise();
+
 	}
 
 	public int getSize() {
@@ -161,9 +187,7 @@ private class ProbArray {
 
 	}
 
-	public void updateProbability(int i, double d) {
-		probs[i] += d;
-
+	private void normalise() {
 		double total = 0;
 		for(double p : probs) {
 			total += p;
@@ -177,6 +201,13 @@ private class ProbArray {
 		}
 
 	}
+
+	public void updateProbability(int i, double d) {
+		probs[i] += d;
+
+		normalise();
+
+	}
 }
 
 private class CrappyPair {
@@ -186,6 +217,30 @@ private class CrappyPair {
 	public CrappyPair(GameState state, int choice) {
 		this.state = state;
 		this.choice = choice;
+	}
+
+}
+
+private class IntPair implements Comparable {
+	public int i1, i2;
+
+	public IntPair(int i1, int i2) {
+		this.i1 = i1;
+		this.i2 = i2;
+	}
+
+	public int compareTo(Object o) {
+		IntPair other = (IntPair)o;
+		if(i2 < other.i2) {
+			return -1;
+
+		} else if(i2 == other.i2) {
+			return 0;
+
+		} else {
+			return 1;
+
+		}
 	}
 
 }
