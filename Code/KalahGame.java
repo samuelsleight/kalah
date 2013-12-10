@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * This class represents the game of Kalah.
  *
@@ -11,22 +13,35 @@
  */
 public class KalahGame {
 	private int[] board;
+	
+	private boolean player1Started;
 	private boolean player1ToMove;
-
+	
+	private ArrayList<Move> prevMoves;
+	
 	public static final int PLAYER_1 = 1;
 	public static final int PLAYER_2 = 2;
 
 	/**
 	 * Constructs a new KalahGame, initialising the board to 4 seeds per house.
 	 */
-	public KalahGame() {
-		reset();
+	public KalahGame(int startingPlayer) {
+		prevMoves = new ArrayList<Move>();
+		reset(startingPlayer);
 	}
 
-	public void reset() {
+	public void reset(int startingPlayer) {
+		if (startingPlayer != PLAYER_1 && startingPlayer != PLAYER_2) {
+			throw new IllegalArgumentException("The starting player must be PLAYER_1 or PLAYER_2");
+		
+		}
+		
 		board = new int[]{4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0};
-		player1ToMove = true;
-
+		
+		player1Started = startingPlayer == PLAYER_1;
+		player1ToMove = player1Started;
+		
+		prevMoves.clear();
 	}
 
 	
@@ -82,7 +97,47 @@ public class KalahGame {
 	{
 		player1ToMove = !player1ToMove;
 	}
-
+	
+	/**
+	Returns the player that started
+	*/
+	public int playerStarted()
+	{
+		if (prevMoves.isEmpty()) {
+			return player1ToMove ? PLAYER_1 : PLAYER_2;
+		} else {
+			return prevMoves.get(0).getPlayerID();
+		}
+	}
+	
+	public KalahGame getState(int move)
+	{
+		KalahGame next = new KalahGame(player1Started ? PLAYER_1 : PLAYER_2);
+		
+		for (int i = 0; i < prevMoves.size(); i++) {
+			next.move(prevMoves.get(i).getMove());
+		}
+		
+		next.move(move);
+		
+		return next;
+	}
+	
+	public KalahGame getState(int[] moves)
+	{
+		KalahGame next = new KalahGame(player1Started ? PLAYER_1 : PLAYER_2);
+		
+		for (int i = 0; i < prevMoves.size(); i++) {
+			next.move(prevMoves.get(i).getMove());
+		}
+		
+		for (int i = 0; i < moves.length; i++) {
+			next.move(moves[i]);
+		}
+		
+		return next;
+	}
+	
 	/**
 	 * Sows the seeds from a given house. The house must not be empty, and must
 	 * be on the correct player's side.
@@ -186,13 +241,40 @@ public class KalahGame {
 	}
 	
 	/**
+	Gets the number of seeds in a specified pot
+	*/
+	public int getSeeds(int pot)
+	{
+		return board[pot];
+	}
+	
+	/**
+	Add any remaining pieces to the corresponding pot
+	*/
+	private void finish()
+	{
+		for (int i = 0; i < 6; i++) {
+			board[6] += board[i];
+			board[i] = 0;
+		}
+		for (int i = 7; i < 13; i++) {
+			board[13] += board[i];
+			board[i] = 0;
+		}
+	}
+	
+	/**
 	Performs a players move, and checks if the game has ended
 	@param player The player to move
 	@return Returns true if the game has ended, otherwise returns false
 	*/
 	public boolean move(AIBase player)
 	{
-		sow(player.makeMove());
+		int move = player.makeMove();
+		
+		sow(move);
+		
+		prevMoves.add(new Move(player.getPlayerID(), move));
 		
 		boolean empty = true;
 		
@@ -203,6 +285,7 @@ public class KalahGame {
 			}
 		}
 		if (empty) {
+			finish();
 			return true;
 		}
 		
@@ -214,6 +297,40 @@ public class KalahGame {
 			}
 		}
 		if (empty) {
+			finish();
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private boolean move(int move)
+	{
+		prevMoves.add(new Move(player1ToMove ? PLAYER_1 : PLAYER_2, move));
+		sow(move);
+
+		boolean empty = true;
+		
+		// check if any sides are empty
+		for (int i = 0; i < 6; i++) {
+			if (board[i] > 0) {
+				empty = false;
+			}
+		}
+		if (empty) {
+			finish();
+			return true;
+		}
+		
+		empty = true;
+		
+		for (int i = 7; i < 13; i++) {
+			if (board[i] > 0) {
+				empty = false;
+			}
+		}
+		if (empty) {
+			finish();
 			return true;
 		}
 		
