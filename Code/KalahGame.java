@@ -80,8 +80,11 @@ public class KalahGame {
 		
 		return moves;
 	}
-		
-	private ArrayList<int[]> getAllowedMoveSequences(int player)
+	
+	/**
+	 * Returns an ArrayList of the possible move sequences a player can make on a turn.
+	 * */
+	public ArrayList<int[]> getAllowedMoveSequences(int player)
 	{
 		int[] moves = getAllowedMoves(player);
 		
