@@ -10,7 +10,10 @@ public class Tree<T> {
                 this.data = data;
                 this.children = new ArrayList<Tree<T>>();
 
-		parent.addChild(this);
+		if(parent != null) {
+			parent.addChild(this);
+
+		}
  
         }
  
@@ -44,5 +47,18 @@ public class Tree<T> {
                 return parent;
  
         }
+
+	public String toString() {
+		String str = "";
+		str += data.toString();
+		str += "\n-- tree --\n";
+		for(Tree<T> t : getChildren()) {
+			str += t.toString();
+
+		}
+		str += "\n-- --\n\n";
+
+		return str;
+	}
  
 }
