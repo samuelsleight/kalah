@@ -98,20 +98,50 @@ public class ROCK extends AIBase
 			}
 		}
 		
-		System.out.println(game);
-		System.out.println("ROCK " + getPlayerID() + "'s move: " + java.util.Arrays.toString(getAllowedMoves()) + ": " + toMove.get(0));
+		//System.out.println(game);
+		//System.out.println("ROCK " + getPlayerID() + "'s move: " + java.util.Arrays.toString(getAllowedMoves()) + ": " + toMove.get(0));
 		
 		return toMove.remove(0);
 	}
 	
-	private void addToPrevTree()
+	private ArrayList<int[]> getMoveSequence()
+	{
+		ArrayList<Move> prevMoves = game.getPreviousMoves();
+		
+		int currentPlayer = game.getStartingPlayerID();
+		ArrayList<Integer> currentMove = new ArrayList<Integer>();
+
+		ArrayList<int[]> moveSequence = new ArrayList<int[]>();
+
+		while (!prevMoves.isEmpty()) {
+			Move move = prevMoves.remove(0);
+			
+			if (move.getPlayerID() == currentPlayer) {
+				currentMove.add(move.getMove());
+			} else {
+				int[] moveArray = new int[currentMove.size()];
+
+				for (int i = 0; i < currentMove.size(); i++) {
+					moveArray[i] = currentMove.get(i);
+				}
+				
+				moveSequence.add(moveArray);
+				
+				currentMove.clear();
+			}
+		}
+		
+		return moveSequence;
+	}
+	
+	public void createTree()
 	{
 		
 	}
 
 	public void win()
 	{
-	
+		
 	}
 	
 	public void lose()
