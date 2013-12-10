@@ -9,10 +9,13 @@ public class Tree<T> {
                 this.parent = parent;
                 this.data = data;
                 this.children = new ArrayList<Tree<T>>();
+
+		parent.addChild(this);
  
         }
  
         public void addChild(Tree<T> child) {
+		child.setParent(this);
                 children.add(child);
  
         }

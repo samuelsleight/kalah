@@ -12,8 +12,7 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 	//TODO - 
 	//searchy bit
 	//heuristics vvvvvv
-	//bonus move
-	//move that puts least pieces in opponent's side
+	//move that puts most in your pit - in their pit
 	//piping
 
 	private static final double PROB_DELTA = 0.2;
@@ -77,26 +76,41 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 		return moves[i];
 	}
 
-	private Tree createTree()
+	private Tree<KalahGame> createTree(int num, Tree<KalahGame> parentGame) //depth of ~5 to keep it manageable
 	{
 		Tree tree = new Tree(null, 1);
-		for(int i = 0; i < 6; i++)
+		if(num < 6) //depth
 		{
-			//sow
+			//TODO - give getData player ID
+			//int[] moves = parentGame.getData().getAllowedMoves();
+			Tree tree = new Tree(null, 1);
+			for(int i = 0; i < moves.length; i++)
+			{
+				KalahGame newState = parentGame.getData().getState(moves[i]);
+				Tree<KalahGame> t = new Tree<KalahGame>(parentGame, newState);
 
-			if(true) //option is good continue searching - this is where we check by heuristic
-			{
-				//recursive call (?)
 			}
-			else
+
+			for(int i = 0; i < game.getAllowedMoves().length; i++)
 			{
-				//set game back to current state
+				//sow
+
+				if(true) //option is good continue searching - this is where we check by heuristic
+				{
+					//recursive call (?)
+				}
+				else
+				{
+					//set game back to current state
+				}
 			}
+
+		}//do pruning (via stricter heuristic?) here
+
+		else
+		{
+			return tree; //yes, yes, a *real* tree needs to be made
 		}
-
-		//do pruning (via stricter heuristic?) here
-
-		return tree; //yes, yes, a *real* tree needs to be made
 	}
 
 	private int addStochasticness() //can call elsewhere for bonus points, and as we know, points equate directly to prizes
