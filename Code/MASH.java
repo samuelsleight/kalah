@@ -92,8 +92,10 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 			}
 		}
 
+		System.out.println("DEBUG YAY - Moves size: " + moves.length + "; Attempted: " + i);
+
 		currentGame.add(new CrappyPair(s, i));
-		return moves[i];
+		return moves[i > moves.length ? i - 1 : i];
 	}
 
 	private void createTree(int num, Tree<KalahGame> parentGame) //depth of ~5 to keep it manageable
@@ -106,9 +108,6 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 			for(int i = 0; i < moves.length; i++)
 			{
 				createTree(num + 1, new Tree<KalahGame>(parentGame, parentGame.getData().getState(moves[i])));
-				//  \\ //  \\
-			     /*	\\ O// \\O // */
-
 
 			}
 
