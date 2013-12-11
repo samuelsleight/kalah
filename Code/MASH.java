@@ -11,12 +11,6 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 	private ArrayList<CrappyPair> currentGame;
 	private Random r;
 
-	//TODO - 
-	//searchy bit
-	//heuristics vvvvvv
-	//move that puts most in your pit - in their pit
-	//piping
-
 	private static final double PROB_DELTA = 0.25;
 	private static final double TREE_DEPTH = 7;
 
@@ -142,18 +136,6 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 		}
 
 	}
-
-	private int addStochasticness() //can call elsewhere for bonus points, and as we know, points equate directly to prizes
-	{
-		return (int)(Math.random()*6); //can weight a certain house randomly
-	}
-
-	private void parseTree() //for useful information
-	{
-		
-	}
-
-	
 
 private class GameState {
 	private int[] availableMoves;
