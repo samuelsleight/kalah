@@ -135,7 +135,7 @@ public class ROCK extends AIBase //Random Ostrich Carrot Kake
 	
 	private int mini(KalahGame cur, int depth)
 	{
-		if (depth == 0) {
+		if (depth <= 0) {
 			return evaluate(cur);
 		}
 		
@@ -167,7 +167,7 @@ public class ROCK extends AIBase //Random Ostrich Carrot Kake
 	
 	private int maxi(KalahGame cur, int depth)
 	{
-		if (depth == 0) {
+		if (depth <= 0) {
 			return evaluate(cur);
 		}
 		
@@ -276,6 +276,10 @@ public class ROCK extends AIBase //Random Ostrich Carrot Kake
 			if (selected == -1) {
 				
 				////randomMove();
+				return null;
+			}
+			
+			if (max <= 0.0) {
 				return null;
 			}
 			
@@ -477,7 +481,7 @@ public class ROCK extends AIBase //Random Ostrich Carrot Kake
 				
 				if (weights == null) {
 					/*randomMove();*/maxi(game, 4);
-				} 
+				}
 			}
 			
 			for (int i = 0; i < doThis.length; i++) {
@@ -485,8 +489,8 @@ public class ROCK extends AIBase //Random Ostrich Carrot Kake
 			}
 		}
 		
-		System.out.println(game);
-		System.out.println("ROCK " + getPlayerID() + "'s move: " + Arrays.toString(getAllowedMoves()) + ": " + toMove.get(0));
+		//System.out.println(game);
+		//System.out.println("ROCK " + getPlayerID() + "'s move: " + Arrays.toString(getAllowedMoves()) + ": " + toMove.get(0));
 		
 		//System.out.println("ROCK's move" + toMove.get(0));
 		
