@@ -65,6 +65,8 @@ We also took some inspiration from Artificial Intelligence: A Modern Approach, f
 
 ** Design
 
+FUTURE ME - http://chessprogramming.wikispaces.com/Minimax
+
 We originally designed a naive base learning algorithm that was based on probability and weighted probability depending on wins/losses. We opted to design this first and then give the algorithm a basis from where to start. In our case, we designed the decision and learning first, via the makeMove method, then fleshed out the search, which was the base our algorithm was going to learn from. Our algorithm was designed with previous games in mind, and we created a HashMap with the "memory" of the game so far, which mapped the GameState with an array of the probabilities based on the results of the last game. Needless to say, the results will be weighted based on how that probability performed, as will be mentioned below.
 
 *** Probabilistic Learning

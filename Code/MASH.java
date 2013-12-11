@@ -10,10 +10,9 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 	private Map<GameState, ProbArray> memory;
 	private ArrayList<CrappyPair> currentGame;
 	private Random r;
-	private KalahGame current;
 
-	private static final int PROB_DELTA = 10;
-	private static final int TREE_DEPTH = 6;
+	private static final int PROB_DELTA = 50;
+	private static final int TREE_DEPTH = 4;
 
 	MASH(KalahGame g, int playerID)
 	{
@@ -53,7 +52,7 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 
 			ArrayList<IntPair> hvals = new ArrayList<IntPair>();
 			for(int i = 0; i < t.getChildren().size(); i++) {
-				hvals.add(new IntPair(i, calculateHeuristic(t.getChildren().get(i))));
+				hvals.add(new IntPair(i, max(t.getChildren().get(i))));
 			}
 
 			int[] probs = new int[hvals.size()];
@@ -69,8 +68,11 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 
 			for(int i = 1; i < hvals.size() - 1; i++) {
 				probs[hvals.get(i).i1] = (hvals.get(i).i2);
+				System.out.print(hvals.get(i).i2 + "; ");
 
 			}
+
+			System.out.println("");
 
 
 			memory.put(s, new ProbArray(probs));
@@ -127,7 +129,8 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 						       }
 						           return max;
 	   }
-	    
+
+
 	   int mini( int depth ) {
 	       if ( depth == 0 ) return -evaluate();
 	           int min = +oo;
@@ -138,22 +141,47 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 						       }
 						           return min;
 	   }
-	*/
+	   */
 
-	private int calculateHeuristic(Tree<KalahGame> tree) 
+	private int max (Tree<KalahGame> tree)
 	{
-		if(tree.getChildren().isEmpty()) {
+	   	if (tree.getChildren().size() == 0)
+		{
 			return heuristic(tree.getData());
-
-		} else {
-			int currMax = 0;
-			for(int i = 0; i < tree.getChildren().size(); i++) {
-				currMax = Math.max(currMax, calculateHeuristic(tree.getChildren().get(i)));
-
-			}
-
-			return currMax;
 		}
+
+		int max = Integer.MIN_VALUE;
+
+		for(int i = 0; i < tree.getChildren().size(); i++)
+		{
+			int score = min(tree.getChildren().get(i));
+			if(score > max)
+			{
+				max = score;
+			}
+		}
+		
+		return max;
+	}
+	   
+	private int min (Tree<KalahGame> tree)
+	{
+	   	if (tree.getChildren().size() == 0)
+		{
+			return -(heuristic(tree.getData()));
+		}
+		int min = Integer.MAX_VALUE;
+
+		for(int i = 0; i < tree.getChildren().size(); i++)
+		{
+			int score = max(tree.getChildren().get(i));
+			if(score < min)
+			{
+				min = score;
+			}
+		}
+		
+		return min;
 	}
 
 	private int heuristic(KalahGame g)
