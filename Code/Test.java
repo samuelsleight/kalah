@@ -8,7 +8,7 @@ public class Test {
 		int draws = 0;
 		
 		for (int i = 0; i < 1000; i++) {
-			System.out.println("\n### Game " + (i + 1) + " ###\n");
+			//System.out.println("\n### Game " + (i + 1) + " ###\n");
 			
 			game.reset((i % 2) == 0 ? KalahGame.PLAYER_1 : KalahGame.PLAYER_2);
 			
@@ -44,7 +44,7 @@ public class Test {
 		*/
 
 		AIBase firstPlayer = new ROCK(game, KalahGame.PLAYER_1, -1);
-		AIBase secondPlayer = new ROCK(game, KalahGame.PLAYER_2, 4);
+		AIBase secondPlayer = new MASH(game, KalahGame.PLAYER_2);
 		
 		pit(game, firstPlayer, secondPlayer);
 
