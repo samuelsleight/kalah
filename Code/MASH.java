@@ -11,8 +11,13 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 	private ArrayList<CrappyPair> currentGame;
 	private Random r;
 
+<<<<<<< HEAD
 	private static final double PROB_DELTA = 0.25;
 	private static final double TREE_DEPTH = 6;
+=======
+	private static final int PROB_DELTA = 10;
+	private static final int TREE_DEPTH = 6;
+>>>>>>> fe1efac53908ad75cb4fcf0b2cfca1312894333c
 
 	MASH(KalahGame g, int playerID)
 	{
@@ -55,22 +60,15 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 				hvals.add(new IntPair(i, calculateHeuristic(t.getChildren().get(i))));
 			}
 
-			Collections.sort(hvals, new Comparator<IntPair>() {
-				public int compare(IntPair p1, IntPair p2) {
-					return p1.compareTo(p2);
+			int[] probs = new int[hvals.size()];
 
-				}
-			});
-
-			double[] probs = new double[hvals.size()];
-			probs[hvals.get(0).i1] = (double)(hvals.get(0).i2 ^ 2);
+			probs[0] = hvals.get(0).i2 * 2;
 
 			for(int i = 1; i < hvals.size() - 1; i++) {
-				probs[hvals.get(i).i1] = (double)(hvals.get(i).i2);
+				probs[i] = (hvals.get(i).i2);
 
 			}
 
-			probs[hvals.get(hvals.size() - 1).i1] = Math.sqrt((double)(hvals.get(hvals.size() - 1).i2));
 
 			memory.put(s, new ProbArray(probs));
 		}
@@ -150,12 +148,12 @@ private class GameState {
 }
 
 private class ProbArray {
-	private double[] probs;
+	private int[] probs;
 
-	public ProbArray(double[] probs) {
+	public ProbArray(int[] probs) {
 		this.probs = probs;
 
-		normalise();
+		//normalise();
 
 	}
 
@@ -164,11 +162,12 @@ private class ProbArray {
 
 	}
 
-	public double get(int i) {
+	public int get(int i) {
 		return probs[i];
 
 	}
 
+	/*
 	private void normalise() {
 		double total = 0;
 		for(double p : probs) {
@@ -183,11 +182,12 @@ private class ProbArray {
 		}
 
 	}
+	*/
 
-	public void updateProbability(int i, double d) {
+	public void updateProbability(int i, int d) {
 		probs[i] += d;
 
-		normalise();
+		//normalise();
 
 	}
 }
