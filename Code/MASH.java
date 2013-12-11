@@ -46,8 +46,10 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 	{
 		int[] moves = game.getAllowedMoves(getPlayerID());
 		GameState s = new GameState(moves, getPlayerID());
-		if(!(memory.containsKey(s))) {
-			Tree<KalahGame> t = new Tree<KalahGame>(null, game);
+		
+		Tree<KalahGame> t = new Tree<KalahGame>(null, game);
+		if(!(memory.containsKey(s)))
+		{
 			createTree(0, t);
 
 			ArrayList<IntPair> hvals = new ArrayList<IntPair>();
@@ -56,31 +58,28 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 			}
 
 			int[] probs = new int[hvals.size()];
-			Collections.sort(hvals, new Comparator<IntPair>() {
-				public int compare(IntPair p1, IntPair p2) {
+			Collections.sort(hvals, new Comparator<IntPair>() 
+			{
+				public int compare(IntPair p1, IntPair p2) 
+				{
 					return p1.compareTo(p2);
-
 				}
-
 			});
 
 			probs[hvals.get(0).i1] = hvals.get(0).i2 ^ 7;
 
-			for(int i = 1; i < hvals.size() - 1; i++) {
+			for(int i = 1; i < hvals.size() - 1; i++) 
+			{
 				probs[hvals.get(i).i1] = (hvals.get(i).i2);
-				System.out.print(hvals.get(i).i2 + "; ");
-
 			}
-
-			System.out.println("");
-
 
 			memory.put(s, new ProbArray(probs));
 		}
 
 		int total = 0;
 		ProbArray probs = memory.get(s);
-		for(int i = 0; i < probs.getSize(); i++) {
+		for(int i = 0; i < probs.getSize(); i++) 
+		{
 			total += probs.get(i);
 
 		}
@@ -88,7 +87,7 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 		int val = r.nextInt(total == 0 ? 1 : Math.abs(total));
 		int accum = 0;
 		int i = 0;
-		for(; i < probs.getSize() ; i++) //This looks so stupidly awesome ;)
+		for(; i < probs.getSize() ; i++)
 		{
 			accum += probs.get(i);
 			if(val < accum) 
@@ -99,6 +98,7 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 
 		i = (i >= moves.length ? i - 1 : i);
 		currentGame.add(new CrappyPair(s, i));
+		
 		return moves[i];
 	}
 
@@ -117,31 +117,6 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 		}
 
 	}
-
-	/*
-	   int maxi( int depth ) {
-	       if ( depth == 0 ) return evaluate();
-	           int max = -oo;
-		       for ( all moves) {
-		               score = mini( depth - 1 );
-			               if( score > max )
-				                   max = score;
-						       }
-						           return max;
-	   }
-
-
-	   int mini( int depth ) {
-	       if ( depth == 0 ) return -evaluate();
-	           int min = +oo;
-		       for ( all moves) {
-		               score = maxi( depth - 1 );
-			               if( score < min )
-				                   min = score;
-						       }
-						           return min;
-	   }
-	   */
 
 	private int max (Tree<KalahGame> tree)
 	{

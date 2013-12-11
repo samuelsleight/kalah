@@ -503,24 +503,12 @@ public class ROCK extends AIBase //Random Ostrich Carrot Kake
 	{
 		ArrayList<int[]> sequence = getMoveSequence(game);
 		
-		for (int i = 0; i < sequence.size(); i++) {
-			System.out.print(java.util.Arrays.toString(sequence.get(i)) + " ");
-		}
-		
-		System.out.println();
-		
 		generateTree(game, 1.0, false);
 	}
 	
 	public void lose()
 	{
 		ArrayList<int[]> sequence = getMoveSequence(game);
-		
-		for (int i = 0; i < sequence.size(); i++) {
-			System.out.print(java.util.Arrays.toString(sequence.get(i)) + " ");
-		}
-		
-		System.out.println();
 		
 		generateTree(game, -1.0, false);
 	}

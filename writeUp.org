@@ -6,19 +6,21 @@
 
 The basic game structure is that the game is represented in an integer array. Positions 0 - 5 represent the top row of houses, position 6 represents the first player's store. Positions 7-12 represent the bottom row of houses, and position 13 represents the second player's store.
 
-We had both of our AI extend a class called AIBase, which get passed into the playGame method when they play the game. The AI individually have a method called makeMove, which will implement their algoririthm and will call the "sow" method of the KalahGame class, which will in turn modify the state of the board, ready for the next AI's move.
+We had both of our AI extend a class called AIBase, which get passed into the playGame method when they play the game. The AI individually have a method called makeMove, which will implement their algorithm and will call the "sow" method of the KalahGame class, which will in turn modify the state of the board, ready for the next AI's move.
 
 After constructing the infrastructure of the game and whatnot, including the base AI class and all of the plumbing for making sure everything connects properly, we went off into our subgroups and made out individual AI which extend the abstract AIBase class. Needless to say, the methods (such as playGame) take an object of type AIBase, which meant we could do all of the game together before we'd made our AI, utilising abstract classes and methods to denote what each AI should have, such as a win/lose method, which each learning algorithm could take and learn from.
 
-We both did have similar ideas in regards to usage of algorithms, and we shared resources found, and ideas about our AI - and there were some cases where methods were useful for both parties, so were put outside the individual AI class, and shared the method for usage in both of our AI, to save time and keep relative concurrence as far as how the AI works is concerned. Despite creating both of AI separately, sharing ideas wasn't something we shied away from.
+We both did have similar ideas in regards to usage of algorithms, and we shared resources found, and ideas about our AI - and there were some cases where methods were useful for both parties, so were put outside the individual AI class, and shared the method for usage in both of our AI, to save time and keep relative concurrence as far as how the AI works is concerned. Despite creating both of AI separately, sharing ideas wasn't something we shied away from. We did share the idea, for example, of extending something like min-max with learning, to make up for the part you cannot search down, and combining the best of both paradigms of AI.
 
 We used GitHub as version control. The repository can be found here - https://github.com/YeyaSwizaw/kalah. We found this was the easiest way to collaborate as a group to create coherent code that meshed well with each other, even despite it not being coded all by one person. This is a lot more efficient and sensible than simply having a dropbox folder, we found, as it's less fiddling around. This made it extremely easy to download the repository from any machine, and push changes from anywhere, without any re-downloading of single files or one zip.
 
 The results of our 1000 games were -
 
-AI 1 - Helen & Amar's - X/1000 wins
+AI 1 - Helen & Amar's - 989/1000 wins
 
-AI 2 - Sam & Andrew's - X/1000 wins
+AI 2 - Sam & Andrew's - 10/1000 wins
+
+There was 1 draw.
 
 * ROCK Algorithm - By Helen and Amar
 
@@ -65,8 +67,6 @@ We also took some inspiration from Artificial Intelligence: A Modern Approach, f
 
 ** Design
 
-FUTURE ME - http://chessprogramming.wikispaces.com/Minimax
-
 We originally designed a naive base learning algorithm that was based on probability and weighted probability depending on wins/losses. We opted to design this first and then give the algorithm a basis from where to start. In our case, we designed the decision and learning first, via the makeMove method, then fleshed out the search, which was the base our algorithm was going to learn from. Our algorithm was designed with previous games in mind, and we created a HashMap with the "memory" of the game so far, which mapped the GameState with an array of the probabilities based on the results of the last game. Needless to say, the results will be weighted based on how that probability performed, as will be mentioned below.
 
 *** Probabilistic Learning
@@ -79,7 +79,7 @@ Based on the results of past games, and depending on the result, the probability
 
 As mentioned above, in the Basis of the Algorithm section, the algorithm we mainly looked at was the M&N algorithm, which is an extension of mini-max. We generated a search tree - utilising pruning to keep the algorithm running in an amount of time that's manageable. We used the mini-max algorithm that, of course, modified by the introduction of probability, and the very act of learning from past games. Needless to say, the search was just a place for the algorithm to begin to learn from, and we could have picked an algorithm that wasn't an adversarial search, nor took into account the opponent's moves at all, which would be completely doable for a search algorithm in this case, since it's paired with a learning algorithm. However, this wouldn't be anywhere near as effective as starting with a strong adversarial search algorithm and utilising probability and learning to enhance this base.
 
-Our program creates a tree based on the potential outcomes of each move, and assigns a value to each. Since a full search of every possible state is quite obviously not feasible, we search a limited amount, to a capped amount of 7 levels, whereby we use the heuristic of the amount of stones in our pit subtracted by the stones in their pit, where the highest number is the optimal state [that we can see without searching deeper]. Naturally, we can run these states by our previously generated probabilistic learning, and enhance this heuristic by our learning and the element of probability, which can, in turn, create a further level of stochastic behaviour that the opposing AI mightn't expect - and its learning can be slightly quelled by utilising randomness.
+Our program creates a tree based on the potential outcomes of each move, and assigns a value to each. Since a full search of every possible state is quite obviously not feasible, we search a limited amount, to a capped amount of 4 levels, whereby we use the heuristic of the amount of stones in our pit subtracted by the stones in their pit, where the highest number is the optimal state [that we can see without searching deeper]. Naturally, we can run these states by our previously generated probabilistic learning, and enhance this heuristic by our learning and the element of probability, which can, in turn, create a further level of stochastic behaviour that the opposing AI mightn't expect - and its learning can be slightly quelled by utilising randomness. We originally attempted to implement an algorithm we thought was similar to min-max, (which turned out to be similar to negamax), but switched to an established algorithm, and converted the pseudocode we found on http://chessprogramming.wikispaces.com/Minimax to our algorithm. The website itself proved to be very useful when researching algorithms and choosing one to use.
 
 *** Learning with Search
 
@@ -91,12 +91,14 @@ Search can only take a program so far in a certain amount of time. Reasonable am
 
 *** Expectations
 
-We expected our algorithm to perform quite well throughout the 1000 games. We expected the learning we utilised to not gain a giant lead from the other AI, rather, to mainly 'keep up with' the opposing team's efforts of learning from our AI. Rather than having a huge boost in improvement as time went on, we expected a slight boost, but that would also be counteracted by the fact the opposing AI was also learning. We expected this from pairing our learning algorithm with a tried and tested adversarial search algorithm.
+We expected our algorithm to perform quite well (and at least equally) throughout the 1000 games. We expected the learning we utilised to not gain a giant lead from the other AI, rather, to mainly 'keep up with' the opposing team's efforts of learning from our AI. Rather than having a huge boost in improvement as time went on, we expected a slight boost, but that would also be counteracted by the fact the opposing AI was also learning. We expected this from pairing our learning algorithm with a tried and tested adversarial search algorithm.
 
 We expected our AI's lead (if one existed) to stay relatively constant as time went on, and any growth or reduction in performance to be slight. Our algorithm didn't start out entirely naively and learn rapidly - it utilised search as well as learning to get a nice foothold immediately. Needless to say, we were playing against another very very strong and well built AI, so we weren't expecting to completely clean the floor with it whatsoever, like we might expect when versing pure randomness or versing a human.
 
 *** Performance
 
-Our algorithm performed a great deal worse than expected, though this was mostly due to the fact that the other team's AI was pretty much as good as ours was, as we should have probably expected. Creating an algorithm that utilises learning on top of search is no easy feat, however, and our algorithm did not perform poorly, by any means, considering the AI we went against. An AI that stomps random chance does not necessarily walk over AI that do the same to random chance. Overall, considering the timeframe we had and the fact that we were (unfortunately) restricted to Java, the performance wasn't bad whatsoever, I think, and its results weren't terrible, by any means.
+Our algorithm performed a great deal worse than expected, though this was mostly due to the fact that the other team's AI was pretty much as good as ours was, as we should have probably expected. Creating an algorithm that utilises learning on top of search is no easy feat, however, and our algorithm did not perform poorly, by any means, considering the AI we went against. An AI that stomps random chance does not necessarily walk over AI that do the same to random chance. Overall, considering the time-frame we had and the fact that we were (unfortunately) restricted to Java, the performance was a lot worse than we expected, but the algorithm itself was actually good against random/naive AI - it wasn't that our AI was bad, per se, just theirs was very, very good.
 
-Our AI was slightly overshadowed by their algorithm, but we found a great deal about using AI in practice from the exercise, and the performance of this was relatively expected, as Kalah is a deterministic game, and a finely tuned search algorithm that utilises good heuristics should generally beat algorithms that incorporate more learning.
+Our AI was relatively overshadowed by their AI, but we found a great deal about using AI in practice from the exercise, and the performance of this wasn't quite so surprising when comparing implementations, as their implementation was a great deal better than ours - despite our ideas being relatively similar. Despite this poor performance, however, we learnt a lot about AI, and how potent an AI can be when it utilises multiple paradigms in tandem to cover the others' weaknesses.
+
+

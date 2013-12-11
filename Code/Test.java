@@ -35,14 +35,10 @@ public class Test {
 		System.out.println("Both players drew " + draws + " time(s)");
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 		KalahGame game = new KalahGame(KalahGame.PLAYER_1);
 		
-		/*
-		AIBase firstPlayer = new Player(game, KalahGame.PLAYER_1);
-		AIBase secondPlayer = new ROCK(game, KalahGame.PLAYER_2);
-		*/
-
 		AIBase firstPlayer = new ROCK(game, KalahGame.PLAYER_1, -1);
 		AIBase secondPlayer = new MASH(game, KalahGame.PLAYER_2);
 		
