@@ -392,6 +392,11 @@ public class KalahGame {
 		
 		return false;
 	}
+
+	public int[] getBoard()
+	{
+		return board;
+	}
 	
 	private boolean move(int move)
 	{

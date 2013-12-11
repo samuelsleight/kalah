@@ -10,14 +10,10 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 	private Map<GameState, ProbArray> memory;
 	private ArrayList<CrappyPair> currentGame;
 	private Random r;
+	private KalahGame current;
 
-<<<<<<< HEAD
-	private static final double PROB_DELTA = 0.25;
-	private static final double TREE_DEPTH = 6;
-=======
 	private static final int PROB_DELTA = 10;
 	private static final int TREE_DEPTH = 6;
->>>>>>> fe1efac53908ad75cb4fcf0b2cfca1312894333c
 
 	MASH(KalahGame g, int playerID)
 	{
@@ -110,7 +106,6 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 		{
 			int[] moves = parentGame.getData().getAllowedMoves(parentGame.getData().getTurn());
 
-			//Tree<KalahGame> tree = new Tree<KalahGame>(null, 1);
 			for(int i = 0; i < moves.length; i++)
 			{
 				createTree(num + 1, new Tree<KalahGame>(parentGame, parentGame.getData().getState(moves[i])));
@@ -121,7 +116,32 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 
 	}
 
-	private int calculateHeuristic(Tree<KalahGame> tree) {
+	/*
+	   int maxi( int depth ) {
+	       if ( depth == 0 ) return evaluate();
+	           int max = -oo;
+		       for ( all moves) {
+		               score = mini( depth - 1 );
+			               if( score > max )
+				                   max = score;
+						       }
+						           return max;
+	   }
+	    
+	   int mini( int depth ) {
+	       if ( depth == 0 ) return -evaluate();
+	           int min = +oo;
+		       for ( all moves) {
+		               score = maxi( depth - 1 );
+			               if( score < min )
+				                   min = score;
+						       }
+						           return min;
+	   }
+	*/
+
+	private int calculateHeuristic(Tree<KalahGame> tree) 
+	{
 		if(tree.getChildren().isEmpty()) {
 			return heuristic(tree.getData());
 

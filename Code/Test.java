@@ -43,7 +43,7 @@ public class Test {
 		AIBase secondPlayer = new ROCK(game, KalahGame.PLAYER_2);
 		*/
 
-		AIBase firstPlayer = new ROCK(game, KalahGame.PLAYER_1, -1);
+		AIBase firstPlayer = new ROCK(game, KalahGame.PLAYER_1, 4);
 		AIBase secondPlayer = new MASH(game, KalahGame.PLAYER_2);
 		
 		pit(game, firstPlayer, secondPlayer);
