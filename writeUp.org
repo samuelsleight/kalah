@@ -37,9 +37,19 @@ The algorithm is fairly simple to implement, but it isn’t the best algorithm o
 Alpha-beta pruning is utilised (Amar said he would implement it, did he?) to help make the algorithm slightly more efficient. Using the heuristic of comparing values of each state (again, not sure on actual heuristic), on the AI’s turn, if one state’s value is lower than a certain value (or was it compared against the other states?) then that branch of the tree is terminated as it is unlikely to provide a good outcome. (And likewise for the opponent’s moves.)
 The algorithm also takes a value for the max depth of the tree to be searched. The higher this value is, the further ahead the AI can search, but also the longer it takes to decide on its next move. Since the time complexity of a search tree is dependent on the depth of the tree searched, a suitable value is needed to balance efficiency and effectiveness. We found that searching up to five levels returned results in a reasonable amount of time.
 
-** Analysis 
+** Testing 
 
-(The algorithm performs well against a human player ie. me, but not sure about another AI… Have yet to see the algorithm run against a non-human player, should I leave this bit for now? The learning bit wasn’t implemented when I tested it either.)
+We did various tests to see how the AI would perform. With a random AI, the win/loss ratio was mostly evenly split because the chance of any of the opponent's moves being optimal is very low as it is random. This makes it very difficult for our AI to learn from.
+Next we tested it against the normal minimax algorithm. Again, the win/loss ratio was fairly even, but sometimes the AI would adapt so well that it won nearly every game. (Why did this even happen.)
+(Next test(s): Combined minimax/learning  vs  minimax and combined minimax/learning vs learning)
+
+** Expectations
+
+We expect the AI to win more games than the opponent (KD + 1) but have the win/loss ratio be fairly even. This is because the AI tries to use the winning moves of both players against the opponent to keep a lead. When no information is present, the AI will choose its moves randomly.
+
+** Analysis
+
+Anal-y-sis
 
 * MASH Algorithm - By Sam and Andrew
 

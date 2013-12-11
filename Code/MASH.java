@@ -11,8 +11,13 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 	private ArrayList<CrappyPair> currentGame;
 	private Random r;
 
+<<<<<<< HEAD
+	private static final double PROB_DELTA = 0.25;
+	private static final double TREE_DEPTH = 6;
+=======
 	private static final int PROB_DELTA = 10;
 	private static final int TREE_DEPTH = 6;
+>>>>>>> fe1efac53908ad75cb4fcf0b2cfca1312894333c
 
 	MASH(KalahGame g, int playerID)
 	{
