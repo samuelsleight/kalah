@@ -2,7 +2,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class ROCK extends AIBase //Random Ostrich Carrot Kake
+public class ROCK extends AIBase
 {
 	private ArrayList<Integer> toMove;
 	

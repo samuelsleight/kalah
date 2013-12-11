@@ -5,7 +5,7 @@ import java.util.Random;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heuristic Algorithm
+public class MASH extends AIBase
 {
 	private Map<GameState, ProbArray> memory;
 	private ArrayList<CrappyPair> currentGame;
