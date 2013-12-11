@@ -43,7 +43,6 @@ public class KalahGame {
 		
 		prevMoves.clear();
 	}
-
 	
 	/**
 	Gets the legal moves a player can take
@@ -209,6 +208,25 @@ public class KalahGame {
 		return next;
 	}
 	
+	public int[] flipToPlayer1(int[] moveSequence)
+	{
+		if (player1Started) {
+			return moveSequence;
+		}
+		
+		int[] newMoveSequence = new int[moveSequence.length];
+		
+		for (int i = 0; i < newMoveSequence.length; i++) {
+			if (moveSequence[i] < 6) {
+				newMoveSequence[i] = moveSequence[i] + 6;
+			} else {
+				newMoveSequence[i] = moveSequence[i] - 6;
+			}
+		}
+		
+		return newMoveSequence;
+	}
+	
 	/**
 	 * Sows the seeds from a given house. The house must not be empty, and must
 	 * be on the correct player's side.
@@ -219,18 +237,18 @@ public class KalahGame {
 	 */
 	private void sow(int n) {
 		if(n == 6 || n == 13) {
-			throw new IllegalArgumentException("Cannot sow seed from store (6 or 13)");
+			throw new IllegalArgumentException("Cannot sow seed from store (6 or 13): " + n);
 
 		} 
 
 		if(board[n] == 0) {
-			throw new IllegalArgumentException("Cannot sow seed from empty house");
+			throw new IllegalArgumentException("Cannot sow seed from empty house: " + n);
 
 		}
 
 		if(player1ToMove) {
 			if(n > 5) {
-				throw new IllegalArgumentException("Seed must be sown from player 1s side (0-6)");
+				throw new IllegalArgumentException("Seed must be sown from player 1s side (0-6): " + n);
 
 			}
 
@@ -267,7 +285,7 @@ public class KalahGame {
 
 		} else {
 			if(n < 7) {
-				throw new IllegalArgumentException("Seed must be sown from player 2s side (7-12)");
+				throw new IllegalArgumentException("Seed must be sown from player 2s side (7-12): " + n);
 
 			}
 
@@ -471,5 +489,4 @@ public class KalahGame {
 		return str;
 
 	}
-
 }

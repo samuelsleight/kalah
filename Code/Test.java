@@ -7,7 +7,11 @@ public class Test {
 		int player2Wins = 0;
 		int draws = 0;
 		
+<<<<<<< HEAD
 		for (int i = 0; i < 200; i++) {
+=======
+		for (int i = 0; i < 1000; i++) {
+>>>>>>> 484bb8152f855375264c712f1e00bc52469f21ff
 			System.out.println("\n### Game " + (i + 1) + " ###\n");
 			
 			game.reset((i % 2) == 0 ? KalahGame.PLAYER_1 : KalahGame.PLAYER_2);
@@ -20,7 +24,7 @@ public class Test {
 				case 2: player2Wins++; firstPlayer.lose(); secondPlayer.win();	break;
 			}
 			
-			System.out.println(game);
+			//System.out.println(game);
 		}
 		
 		System.out.println("---Results---");
@@ -37,8 +41,8 @@ public class Test {
 		AIBase secondPlayer = new ROCK(game, KalahGame.PLAYER_2);
 		*/
 
-		AIBase firstPlayer = new MASH(game, KalahGame.PLAYER_1);
-		AIBase secondPlayer = new ROCK(game, KalahGame.PLAYER_2, 1);
+		AIBase firstPlayer = new ROCK(game, KalahGame.PLAYER_1, 1);
+		AIBase secondPlayer = new RandomAI(game, KalahGame.PLAYER_2);
 		
 		pit(game, firstPlayer, secondPlayer);
 
