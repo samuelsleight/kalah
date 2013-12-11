@@ -56,11 +56,18 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 			}
 
 			int[] probs = new int[hvals.size()];
+			Collections.sort(hvals, new Comparator<IntPair>() {
+				public int compare(IntPair p1, IntPair p2) {
+					return p1.compareTo(p2);
 
-			probs[0] = hvals.get(0).i2 * 2;
+				}
+
+			});
+
+			probs[hvals.get(0).i1] = hvals.get(0).i2 ^ 7;
 
 			for(int i = 1; i < hvals.size() - 1; i++) {
-				probs[i] = (hvals.get(i).i2);
+				probs[hvals.get(i).i1] = (hvals.get(i).i2);
 
 			}
 
@@ -68,9 +75,15 @@ public class MASH extends AIBase //MASH Algorithm - Mega Autonomous Sexy Heurist
 			memory.put(s, new ProbArray(probs));
 		}
 
+		int total = 0;
 		ProbArray probs = memory.get(s);
-		double val = r.nextDouble();
-		double accum = 0;
+		for(int i = 0; i < probs.getSize(); i++) {
+			total += probs.get(i);
+
+		}
+
+		int val = r.nextInt(total == 0 ? 1 : Math.abs(total));
+		int accum = 0;
 		int i = 0;
 		for(; i < probs.getSize() ; i++) //This looks so stupidly awesome ;)
 		{
