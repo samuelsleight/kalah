@@ -20,9 +20,26 @@ AI 1 - Helen & Amar's - X/1000 wins
 
 AI 2 - Sam & Andrew's - X/1000 wins
 
-* Something Algorithm - By Helen and Amar
+* ROCK Algorithm - By Helen and Amar
 
-Put stuff here!
+** Basis
+
+The basis of this algorithm is the minimax algorithm, which is a staple AI algorithm for logic games. The minimax algorithm is a popular algorithm that is used in two-player games such as chess and tic-tac-toe because you can see all of the possible options that you or your opponent can make. (Otherwise known as ‘full-information’ games.)  This helps to represent the game as a search tree of sorts, with the levels of the tree alternating between player 1’s and player 2’s available moves. The aim of the algorithm is to ‘maximise’ your options whilst ‘minimising’ the opponent’s, in order to (hopefully) find a winning solution.
+
+The algorithm is fairly simple to implement, but it isn’t the best algorithm out there. (I referred to the lecture notes only in AdversarialSearch.pdf, but it is well-documented in literature normally.) ]
+
+** Learning
+
+(As explained to me earlier, may need tweaking.) In every game, a search tree of possible moves up to a certain depth is created, and the AI stores the path that it takes. Every possible state has a value attached to it, and this value is the heuristic (I think?) that determines how likely the AI will choose that move. At the end of the game, the AI adds a value to the path taken depending on the outcome of the game. If the path was a winning solution, a positive value is added to all of the states in the search tree of the next game, so that it is more likely to choose said states. (And vice versa for a losing solution.) If a number of states have the same highest-weighted values, then one state out of those is randomly picked to be the next move. We thought it wasn’t in our best interests to create another search tree from those states (minimax-ing the minimax, woahhh), so it saves time.
+
+** Efficiency
+
+Alpha-beta pruning is utilised (Amar said he would implement it, did he?) to help make the algorithm slightly more efficient. Using the heuristic of comparing values of each state (again, not sure on actual heuristic), on the AI’s turn, if one state’s value is lower than a certain value (or was it compared against the other states?) then that branch of the tree is terminated as it is unlikely to provide a good outcome. (And likewise for the opponent’s moves.)
+The algorithm also takes a value for the max depth of the tree to be searched. The higher this value is, the further ahead the AI can search, but also the longer it takes to decide on its next move. Since the time complexity of a search tree is dependent on the depth of the tree searched, a suitable value is needed to balance efficiency and effectiveness. We found that searching up to five levels returned results in a reasonable amount of time.
+
+** Analysis 
+
+(The algorithm performs well against a human player ie. me, but not sure about another AI… Have yet to see the algorithm run against a non-human player, should I leave this bit for now? The learning bit wasn’t implemented when I tested it either.)
 
 * MASH Algorithm - By Sam and Andrew
 
@@ -42,7 +59,7 @@ We originally designed a naive base learning algorithm that was based on probabi
 
 *** Probabilistic Learning
 
-We generated a probability array (represented in a private class ProbArray) based on the probability distribution of the possible moves that can be made. Before the search algorithm and any learning has weighted these distributions, they start at a state such that the sum of the probabilities is 1. Any change to any probability goes through the updateProbability method, which calculates the other probabilities in a way that they remain at 1, even if one of them is increased by an amount.
+We generated a probability array (represented in a private class ProbArray) based on the probability distribution of the possible moves that can be made. Before the search algorithm and any learning has weighted these distributions, they start at an integer that adds up to 100. We originally experimented with using doubles, which added up to 1, though errors in calculations with numbers represented in floating point form meant we had to change to using integers instead for a more precise and sensibly calculated program. This system, however, meant we could weight certain probabilities, and choose how much to weight the AI's choices based on its learning - it'd get a much higher probability if the move has worked in the past, and a much lower probability if the move has resulted in a loss in the past. This means we can also weight heavily based on the results of our min-max search.
 
 Based on the results of past games, and depending on the result, the probability of certain states will be increased, based on an int defined at the top of the class, PROB DELTA. We can (and did) fiddle with the number a bit to try and perfect the amount of learning our algorithm took from a certain move. It'd be foolish to make it learn too much - as the algorithm would favour things that have worked in the past even if they mightn't work in this situation, likewise with too little, as you don't want the algorithm not learning enough from the results of the previous games. We ran the AI against itself a few times, and based the effectiveness on how often player 1 won proportional to player 2 - as since Kalah is a biased game, as the AI learns, player 1 will win more often.
 
@@ -50,11 +67,13 @@ Based on the results of past games, and depending on the result, the probability
 
 As mentioned above, in the Basis of the Algorithm section, the algorithm we mainly looked at was the M&N algorithm, which is an extension of mini-max. We generated a search tree - utilising pruning to keep the algorithm running in an amount of time that's manageable. We used the mini-max algorithm that, of course, modified by the introduction of probability, and the very act of learning from past games. Needless to say, the search was just a place for the algorithm to begin to learn from, and we could have picked an algorithm that wasn't an adversarial search, nor took into account the opponent's moves at all, which would be completely doable for a search algorithm in this case, since it's paired with a learning algorithm. However, this wouldn't be anywhere near as effective as starting with a strong adversarial search algorithm and utilising probability and learning to enhance this base.
 
-Our program creates a tree based on the potential outcomes of each move, and assigns a value to each. Since a full search of every possible state is quite obviously not feasible, we search a limited amount, to a capped amount of 5 levels, whereby we use the heuristic of the amount of stones in our pit subtracted by the stones in their pit, where the highest number is the optimal state [that we can see without searching deeper]. Naturally, we can run these states by our previously generated probabilistic learning, and enhance this heuristic by our learning and the element of probability, which can, in turn, create a further level of stochastic behaviour that the opposing AI mightn't expect - and its learning can be slightly quelled by utilising randomness.
+Our program creates a tree based on the potential outcomes of each move, and assigns a value to each. Since a full search of every possible state is quite obviously not feasible, we search a limited amount, to a capped amount of 7 levels, whereby we use the heuristic of the amount of stones in our pit subtracted by the stones in their pit, where the highest number is the optimal state [that we can see without searching deeper]. Naturally, we can run these states by our previously generated probabilistic learning, and enhance this heuristic by our learning and the element of probability, which can, in turn, create a further level of stochastic behaviour that the opposing AI mightn't expect - and its learning can be slightly quelled by utilising randomness.
 
-*** Alpha-Beta Pruning
+*** Learning with Search
 
-We utilised Alpha-Beta Pruning to keep our algorithm even more efficient. The heuristic we mainly utilised was, as mentioned earlier, the amount of seeds we got into our pit minus the amount of seeds they got in theirs. Needless to say, we wanted to prune the branches where we know we do not need to check; these nodes would be both those where the where we know we can get a node that's smaller, and those where we know we can get a node that's bigger, for min-max respectively. This let us search slightly further than we otherwise probably could in a reasonable amount of time, and kept our algorithm succinct and wasting minimal resources. Needless to say, this only works if their AI behaves entirely rationally, and if they implement some degree of randomness, it the pruning could work against us.
+As the assignment was to make a learning algorithm, we naturally did attempt to make the AI learn based on incorrect moves in the past on top of a min-max search base. We found it important to make sure that though the algorithm does learn, it learns from an established point of rational behaviour. Starting completely naively is, naturally, worse than starting with an established base, and learning from that base can create an AI that utilises two strong ways of beating the task at hand.
+
+Search can only take a program so far in a certain amount of time. Reasonable amounts of time restricts simply searching every possible move ever - something which likely wouldn't ever complete in some games, such as Go, and would take an extraordinarily long time, probably not able to compute fully, in games with smaller potential states, such as Kalah. Alpha-Beta pruning can help, but it won't help your algorithm search much further - even if it does help the speed a bit. We found learning was a perfect place to go where our search leaves us - and though an algorithm based on learning alone generally won't beat (from something other than dumb luck) a well-made search based AI, not at least for a very very large amount of games, an algorithm with search that also takes into account what it has learned can generally trump one that doesn't, but performs similarly in terms of search. Our learning wasn't perfectly implemented, but we felt like it was more than good enough for this particular task, especially considering it was paired with a min-max.
 
 ** Analysis of Behaviour
 
@@ -62,9 +81,10 @@ We utilised Alpha-Beta Pruning to keep our algorithm even more efficient. The he
 
 We expected our algorithm to perform quite well throughout the 1000 games. We expected the learning we utilised to not gain a giant lead from the other AI, rather, to mainly 'keep up with' the opposing team's efforts of learning from our AI. Rather than having a huge boost in improvement as time went on, we expected a slight boost, but that would also be counteracted by the fact the opposing AI was also learning. We expected this from pairing our learning algorithm with a tried and tested adversarial search algorithm.
 
-We expected our AI's lead (if one existed) to stay relatively constant as time went on, and any growth or reduction in performance to be slight. Our algorithm didn't start out entirely naively and learn rapidly - it utilised search as well as learning to get a nice foothold immediately.
+We expected our AI's lead (if one existed) to stay relatively constant as time went on, and any growth or reduction in performance to be slight. Our algorithm didn't start out entirely naively and learn rapidly - it utilised search as well as learning to get a nice foothold immediately. Needless to say, we were playing against another very very strong and well built AI, so we weren't expecting to completely clean the floor with it whatsoever, like we might expect when versing pure randomness or versing a human.
 
 *** Performance
 
-Our algorithm performed
+Our algorithm performed a great deal worse than expected, though this was mostly due to the fact that the other team's AI was pretty much as good as ours was, as we should have probably expected. Creating an algorithm that utilises learning on top of search is no easy feat, however, and our algorithm did not perform poorly, by any means, considering the AI we went against. An AI that stomps random chance does not necessarily walk over AI that do the same to random chance. Overall, considering the timeframe we had and the fact that we were (unfortunately) restricted to Java, the performance wasn't bad whatsoever, I think, and its results weren't terrible, by any means.
 
+Our AI was slightly overshadowed by their algorithm, but we found a great deal about using AI in practice from the exercise, and the performance of this was relatively expected, as Kalah is a deterministic game, and a finely tuned search algorithm that utilises good heuristics should generally beat algorithms that incorporate more learning.
