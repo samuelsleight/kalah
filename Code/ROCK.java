@@ -186,10 +186,13 @@ public class ROCK extends AIBase
 	{
 		ArrayList<int[]> prevMoves = getMoveSequence();
 		
-		// reset tree on AI's first move
+		//System.out.println("PREV:" + prevMoves.size());
+		
+		//reset tree on first move
 		if (prevMoves.size() < 2) {
 			iter = tree;
 		}
+
 		if (iter == null) {
 			randomMove();
 			return;
@@ -199,7 +202,12 @@ public class ROCK extends AIBase
 		if (!prevMoves.isEmpty()) {
 			int[] moveSequence = prevMoves.get(prevMoves.size() - 1);
 			
+			moveSequence = game.flipToPlayer1(moveSequence);
+			
 			boolean found = false;
+			
+			//System.out.println("\nNot sure: " + Arrays.toString(moveSequence));
+			//printTree(iter, 2);
 			
 			ArrayList<Tree<TreePair>> children = iter.getChildren();
 	
@@ -209,6 +217,7 @@ public class ROCK extends AIBase
 				if (Arrays.equals(moveSequence, child.getData().moveSequence)) {
 					iter = child;
 					found = true;
+					//System.out.println("Passed it on to " + Arrays.toString(child.getData().moveSequence));
 					break;
 				}
 			}
@@ -217,6 +226,7 @@ public class ROCK extends AIBase
 			if (!found) {
 				iter = null;
 				randomMove();
+				//System.out.println("Never passed");
 				return;
 			}
 		}
@@ -227,14 +237,14 @@ public class ROCK extends AIBase
 			randomMove();
 		} else {
 			// choose the best move (minimax perhaps)
-			double max = -1.0 / 0.0;
+			double max = 0.0;
 			int selected = -1;
 			
 			for (int c = 0; c < children.size(); c++) {
 				Tree<TreePair> child = children.get(c);
-				double weight = child.getData().weight;
+				double weight = child.getData().weight;// + rand.nextDouble() * 10.0;
 				
-				boolean isValid = false;
+				/*boolean isValid = false;
 				
 				ArrayList<int[]> moves = game.getAllowedMoveSequences(getPlayerID());
 				
@@ -244,9 +254,11 @@ public class ROCK extends AIBase
 					}
 				}
 				
+			//	int[] childMoveSequence = child.getData().moveSequence;
+				
 				if (!isValid) {
 					continue;
-				}
+				}*/
 				
 				if (weight > max) {
 					max = weight;
@@ -254,22 +266,39 @@ public class ROCK extends AIBase
 				}
 			}
 			
-			if (max == (-1.0 / 0.0)) {
+			// if all of the moves had a negative hei
+			if (selected == -1) {
+				
 				randomMove();
 				return;
 			}
 			
+			//System.out.print("Following previous Path: ");
+			
 			iter = children.get(selected);
 			
+			//System.out.println(Arrays.toString(iter.getData().moveSequence));
+			//printTree(iter, 3);
 			doThis = iter.getData().moveSequence;
+			
+			if (getPlayerID() == KalahGame.PLAYER_1 && doThis[0] > 6) {
+				doThis = game.flipToPlayer1(doThis);
+			} else  if (getPlayerID() == KalahGame.PLAYER_2 && doThis[0] < 7) {
+				doThis = game.flipToPlayer1(doThis);
+			}
+			
+			//System.out.println(Arrays.toString(doThis));
 		}
 	}
 	
 	public int makeMove()
 	{
 		if (toMove.isEmpty()) {
-			//negaMax(game, maxDepth);
-			wingin();
+			if (maxDepth > 0) {
+				negaMax(game, maxDepth);
+			} else {
+				wingin();
+			}
 			
 			for (int i = 0; i < doThis.length; i++) {
 				toMove.add(doThis[i]);
@@ -278,6 +307,10 @@ public class ROCK extends AIBase
 		
 		//System.out.println(game);
 		//System.out.println("ROCK " + getPlayerID() + "'s move: " + Arrays.toString(getAllowedMoves()) + ": " + toMove.get(0));
+		
+		//System.out.println("ROCK's move" + toMove.get(0));
+		
+		//printTree(tree, 5);
 		
 		return toMove.remove(0);
 	}
@@ -318,11 +351,37 @@ public class ROCK extends AIBase
 			}
 		}
 		
+		//add any remaining moves
+		if (!currentMoveSequence.isEmpty()) {
+			// convert moveSequence into an int array
+			int[] moveArray = new int[currentMoveSequence.size()];
+			
+			for (int x = 0; x < moveArray.length; x++) {
+				moveArray[x] = currentMoveSequence.get(x);
+			}
+			
+			moveSequence.add(moveArray);
+		}
+		
 		return moveSequence;
 	}
 	
-	public void createTree(ArrayList<int[]> prevMoves, double originalWeight)
+	public void createTree(ArrayList<int[]> originalPrevMoves, double originalWeight)
 	{
+		// flip the tree if PLAYER_2 started
+		ArrayList<int[]> prevMoves;
+		
+		if (game.getStartingPlayerID() == KalahGame.PLAYER_1) {
+			prevMoves = originalPrevMoves;
+		} else {
+			prevMoves = new ArrayList<int[]>(originalPrevMoves.size());
+			
+			// create opposite prev moves
+			for (int i = 0; i < originalPrevMoves.size(); i++) {
+				prevMoves.add(game.flipToPlayer1(originalPrevMoves.get(i)));
+			}
+		}
+		
 		Tree<TreePair> current = tree;
 		
 		int player = game.getStartingPlayerID();
@@ -374,19 +433,56 @@ public class ROCK extends AIBase
 		
 		ArrayList<Tree<TreePair>> children = tree.getChildren();
 		
+		
 		/*for (int c = 0; c < children.size(); c++) {
 			Tree<TreePair> child = children.get(c);
 			System.out.println(Arrays.toString(child.getData().moveSequence) + " : " + child.getData().weight);
+		}
+		
+		children = children.get(0).getChildren();
+		
+		for (int c = 0; c < children.size(); c++) {
+			Tree<TreePair> child = children.get(c);
+			System.out.println("+++" + Arrays.toString(child.getData().moveSequence) + " : " + child.getData().weight);
 		}*/
+	}
+	
+	private int getNodeDepth(Tree<TreePair> cur)
+	{
+		int depth = 0;
+		
+		while (cur.getParent() != null) {
+			cur = cur.getParent();
+			depth++;
+		}
+		
+		return depth;
+	}
+	
+	public void printTree(Tree<TreePair> cur, int depth)
+	{	
+		if (depth == 0) {
+			return;
+		}
+		
+		System.out.println("Depth " + depth + " = " + Arrays.toString(cur.getData().moveSequence));
+		
+		ArrayList<Tree<TreePair>> children = cur.getChildren();
+		
+		for (int i = 0; i < children.size(); i++) {
+			printTree(children.get(i), depth - 1);
+		}
 	}
 
 	public void win()
 	{
 		ArrayList<int[]> sequence = getMoveSequence();
 		
-		/*for (int i = 0; i < sequence.size(); i++) {
-			System.out.println(java.util.Arrays.toString(sequence.get(i)));
-		}*/
+		for (int i = 0; i < sequence.size(); i++) {
+			System.out.print(java.util.Arrays.toString(sequence.get(i)) + " ");
+		}
+		
+		System.out.println();
 		
 		createTree(sequence, 1.0);
 	}
@@ -395,9 +491,11 @@ public class ROCK extends AIBase
 	{
 		ArrayList<int[]> sequence = getMoveSequence();
 		
-		/*for (int i = 0; i < sequence.size(); i++) {
-			System.out.println(java.util.Arrays.toString(sequence.get(i)));
-		}*/
+		for (int i = 0; i < sequence.size(); i++) {
+			System.out.print(java.util.Arrays.toString(sequence.get(i)) + " ");
+		}
+		
+		System.out.println();
 		
 		createTree(sequence, -1.0);
 	}

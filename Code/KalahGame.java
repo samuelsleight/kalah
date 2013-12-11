@@ -218,9 +218,9 @@ public class KalahGame {
 		
 		for (int i = 0; i < newMoveSequence.length; i++) {
 			if (moveSequence[i] < 6) {
-				newMoveSequence[i] = moveSequence[i] + 6;
+				newMoveSequence[i] = moveSequence[i] + 7;
 			} else {
-				newMoveSequence[i] = moveSequence[i] - 6;
+				newMoveSequence[i] = moveSequence[i] - 7;
 			}
 		}
 		
@@ -395,8 +395,8 @@ public class KalahGame {
 	
 	private boolean move(int move)
 	{
-		prevMoves.add(new Move(player1ToMove ? PLAYER_1 : PLAYER_2, move));
 		sow(move);
+		prevMoves.add(new Move(player1ToMove ? PLAYER_1 : PLAYER_2, move));
 
 		boolean empty = true;
 		

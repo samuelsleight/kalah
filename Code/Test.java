@@ -8,11 +8,17 @@ public class Test {
 		int draws = 0;
 		
 		for (int i = 0; i < 1000; i++) {
-			System.out.println("\n### Game " + (i + 1) + " ###\n");
+			//System.out.println("\n### Game " + (i + 1) + " ###\n");
 			
 			game.reset((i % 2) == 0 ? KalahGame.PLAYER_1 : KalahGame.PLAYER_2);
 			
 			int result = game.playGame(firstPlayer, secondPlayer);
+			
+			if (result == 1) {
+				System.out.println("Player 1 won : ");
+			} else if (result == 2) {
+				System.out.println("Player 2 won : ");
+			}
 			
 			switch (result) {
 				case 0: draws++;	break;
@@ -38,7 +44,7 @@ public class Test {
 		*/
 
 		AIBase firstPlayer = new ROCK(game, KalahGame.PLAYER_1, 1);
-		AIBase secondPlayer = new RandomAI(game, KalahGame.PLAYER_2);
+		AIBase secondPlayer = new ROCK(game, KalahGame.PLAYER_2, -11);
 		
 		pit(game, firstPlayer, secondPlayer);
 
