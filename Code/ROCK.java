@@ -40,66 +40,6 @@ public class ROCK extends AIBase //Random Ostrich Carrot Kake
 		}
 	}
 	
-	private int negaMax(KalahGame cur, int depth)
-	{
-		if (depth == 0) {
-			return evaluate(cur);
-		}
-		
-		int max = Integer.MIN_VALUE;
-		
-		ArrayList<int[]> moves = cur.getAllowedMoveSequences(cur.getTurn());
-		int[] bestMove = {};
-				
-		if (moves.isEmpty()) {
-			return evaluate(cur);
-		}
-		
-		for (int i = 0; i < moves.size(); i++) {
-			KalahGame next = cur.getState(moves.get(i));
-			
-			int score = -negaMax(next, depth - 1);
-			
-			if (score > max) {
-				max = score;
-				bestMove = moves.get(i);
-			}
-		}
-		
-		doThis = bestMove;
-		
-		return max;
-	}
-	
-	/*public void generateMoveSequence()
-	{
-		ArrayList<int[]> moves = game.getAllowedMoveSequences(getPlayerID());
-		int[] weights = new int[moves.size()];
-	
-		int selected = -1;
-		int max = Integer.MIN_VALUE;
-	
-		for (int i = 0; i < moves.size(); i++) {
-			KalahGame next = game.getState(moves.get(i));
-			
-			int result = evaluate(next);
-
-			if (result > max) {
-				max = result;
-				selected = i;
-			}
-			weights[i] = result;
-		}
-		
-		for (int i = 0; i < moves.get(selected).length; i++) {
-			toMove.add(moves.get(selected)[i]);
-		}
-		
-		for (int i = 0; i < moves.size(); i++) {
-			System.out.println(java.util.Arrays.toString(moves.get(i)) + " : " + weights[i]);
-		}
-	}*/
-	
 	private void randomMove()
 	{
 		ArrayList<int[]> moves = game.getAllowedMoveSequences(getPlayerID());
@@ -109,224 +49,18 @@ public class ROCK extends AIBase //Random Ostrich Carrot Kake
 		doThis = moves.get(randMove);
 	}
 	
-	/*public void wingin()
-	{
-		ArrayList<int[]> prevMoves = getMoveSequence();
-		
-		// reset tree on AI's first move
-		if (prevMoves.size() < 2) {
-			iter = tree;
-		}
-		
-		// move to other playrs move in tree (if it exists)
-		if (!prevMoves.isEmpty()) {
-			// other players previous move
-			int[] moveSequence = prevMoves.get(prevMoves.size() - 1);
-			
-			boolean found = false;
-			
-			if (iter != null) {
-				ArrayList<Tree<TreePair>> children = iter.getChildren();
-		
-				for (int c = 0; c < children.size(); c++) {
-					Tree<TreePair> child = children.get(c);
-			
-					if (Arrays.equals(moveSequence, child.getData().moveSequence)) {
-						iter = child;
-						found = true;
-				
-						break;
-					}
-				}
-			
-				// if no path exists, just set the iterator to null
-				if (!found) {
-					iter = null;
-				}
-			}
-		}
-		
-		if (iter == null) {
-			randomMove();
-			return;
-		}
-		
-		ArrayList<Tree<TreePair>> children = iter.getChildren();
-		
-		if (children.isEmpty()) {
-			randomMove();
-		} else {
-			double max = -1.0 / 0.0;
-			int selected = -1;
-			
-			for (int c = 0; c < children.size(); c++) {
-				Tree<TreePair> child = children.get(c);
-				double weight = child.getData().weight;
-				
-				if (weight > max) {
-					max = weight;
-					selected = c;
-				}
-				
-				//PRINT
-				Tree<TreePair> printer = child;
-				while (printer != null) {
-					System.out.println(Arrays.toString(printer.getData().moveSequence));
-					printer = printer.getParent();
-				}
-			}
-			
-			iter = children.get(selected);
-			
-			doThis = iter.getData().moveSequence;
-		}
-	}*/
-	
-	public void wingin()
-	{
-		ArrayList<int[]> prevMoves = getMoveSequence();
-		
-		//System.out.println("PREV:" + prevMoves.size());
-		
-		//reset tree on first move
-		if (prevMoves.size() < 2) {
-			iter = tree;
-		}
-
-		if (iter == null) {
-			randomMove();
-			return;
-		}
-		
-		// move through the opponents move in the tree iterator
-		if (!prevMoves.isEmpty()) {
-			int[] moveSequence = prevMoves.get(prevMoves.size() - 1);
-			
-			moveSequence = game.flipToPlayer1(moveSequence);
-			
-			boolean found = false;
-			
-			//System.out.println("\nNot sure: " + Arrays.toString(moveSequence));
-			//printTree(iter, 2);
-			
-			ArrayList<Tree<TreePair>> children = iter.getChildren();
-	
-			for (int c = 0; c < children.size(); c++) {
-				Tree<TreePair> child = children.get(c);
-		
-				if (Arrays.equals(moveSequence, child.getData().moveSequence)) {
-					iter = child;
-					found = true;
-					//System.out.println("Passed it on to " + Arrays.toString(child.getData().moveSequence));
-					break;
-				}
-			}
-		
-			// if no path exists, just set the iterator to null
-			if (!found) {
-				iter = null;
-				randomMove();
-				//System.out.println("Never passed");
-				return;
-			}
-		}
-		
-		ArrayList<Tree<TreePair>> children = iter.getChildren();
-		
-		if (children.isEmpty()) {
-			randomMove();
-		} else {
-			// choose the best move (minimax perhaps)
-			double max = 0.0;
-			int selected = -1;
-			
-			for (int c = 0; c < children.size(); c++) {
-				Tree<TreePair> child = children.get(c);
-				double weight = child.getData().weight;// + rand.nextDouble() * 10.0;
-				
-				/*boolean isValid = false;
-				
-				ArrayList<int[]> moves = game.getAllowedMoveSequences(getPlayerID());
-				
-				for (int i = 0; i < moves.size(); i++) {
-					if (Arrays.equals(child.getData().moveSequence, moves.get(i))) {
-						isValid = true;
-					}
-				}
-				
-			//	int[] childMoveSequence = child.getData().moveSequence;
-				
-				if (!isValid) {
-					continue;
-				}*/
-				
-				if (weight > max) {
-					max = weight;
-					selected = c;
-				}
-			}
-			
-			// if all of the moves had a negative hei
-			if (selected == -1) {
-				
-				randomMove();
-				return;
-			}
-			
-			//System.out.print("Following previous Path: ");
-			
-			iter = children.get(selected);
-			
-			//System.out.println(Arrays.toString(iter.getData().moveSequence));
-			//printTree(iter, 3);
-			doThis = iter.getData().moveSequence;
-			
-			if (getPlayerID() == KalahGame.PLAYER_1 && doThis[0] > 6) {
-				doThis = game.flipToPlayer1(doThis);
-			} else  if (getPlayerID() == KalahGame.PLAYER_2 && doThis[0] < 7) {
-				doThis = game.flipToPlayer1(doThis);
-			}
-			
-			//System.out.println(Arrays.toString(doThis));
-		}
-	}
-	
-	public int makeMove()
-	{
-		if (toMove.isEmpty()) {
-			if (maxDepth > 0) {
-				negaMax(game, maxDepth);
-			} else {
-				wingin();
-			}
-			
-			for (int i = 0; i < doThis.length; i++) {
-				toMove.add(doThis[i]);
-			}
-		}
-		
-		//System.out.println(game);
-		//System.out.println("ROCK " + getPlayerID() + "'s move: " + Arrays.toString(getAllowedMoves()) + ": " + toMove.get(0));
-		
-		//System.out.println("ROCK's move" + toMove.get(0));
-		
-		//printTree(tree, 5);
-		
-		return toMove.remove(0);
-	}
-	
 	/**
 	Converts the KalahGame's previous move list into a sequence of moves
 	*/
-	private ArrayList<int[]> getMoveSequence()
+	private ArrayList<int[]> getMoveSequence(KalahGame cur)
 	{
-		ArrayList<Move> prevMoves = game.getPreviousMoves();
+		ArrayList<Move> prevMoves = cur.getPreviousMoves();
 		
 		ArrayList<int[]> moveSequence = new ArrayList<int[]>();
 		
 		ArrayList<Integer> currentMoveSequence = new ArrayList<Integer>();
 		
-		int currentPlayer = game.getStartingPlayerID();
+		int currentPlayer = cur.getStartingPlayerID();
 		
 		for (int i = 0; i < prevMoves.size(); i++) {
 			Move move = prevMoves.get(i);
@@ -366,25 +100,236 @@ public class ROCK extends AIBase //Random Ostrich Carrot Kake
 		return moveSequence;
 	}
 	
-	public void createTree(ArrayList<int[]> originalPrevMoves, double originalWeight)
+	// minimax part of the AI
+	
+	/*private int negaMax(KalahGame cur, int depth)
 	{
+		if (depth == 0) {
+			return evaluate(cur);
+		}
+		
+		int max = Integer.MIN_VALUE;
+		
+		ArrayList<int[]> moves = cur.getAllowedMoveSequences(cur.getTurn());
+		int[] bestMove = {};
+				
+		if (moves.isEmpty()) {
+			return evaluate(cur);
+		}
+		
+		for (int i = 0; i < moves.size(); i++) {
+			KalahGame next = cur.getState(moves.get(i));
+			
+			int score = -negaMax(next, depth - 1);
+			
+			if (score > max) {
+				max = score;
+				bestMove = moves.get(i);
+			}
+		}
+		
+		doThis = bestMove;
+		
+		return max;
+	}*/
+	
+	private int mini(KalahGame cur, int depth)
+	{
+		if (depth == 0) {
+			return evaluate(cur);
+		}
+		
+		int min = Integer.MAX_VALUE;
+	
+		ArrayList<int[]> moves = cur.getAllowedMoveSequences(cur.getTurn());
+		
+		if (moves.isEmpty()) {
+			return evaluate(cur);
+		}
+		
+		int[] bestMove = {};
+		
+		for (int i = 0; i < moves.size(); i++) {
+			KalahGame next = cur.getState(moves.get(i));
+			
+			int score = maxi(next, depth - 1);
+			
+			if (score < min) {
+				min = score;
+				bestMove = moves.get(i);
+			}
+		}
+		
+		doThis = bestMove;
+		
+		return min;
+	}
+	
+	private int maxi(KalahGame cur, int depth)
+	{
+		if (depth == 0) {
+			return evaluate(cur);
+		}
+		
+		int max = Integer.MIN_VALUE;
+	
+		ArrayList<int[]> moves = cur.getAllowedMoveSequences(cur.getTurn());
+		
+		if (moves.isEmpty()) {
+			return evaluate(cur);
+		}
+		
+		int[] bestMove = {};
+		
+		for (int i = 0; i < moves.size(); i++) {
+			KalahGame next = cur.getState(moves.get(i));
+			
+			int score = mini(next, depth - 1);
+			
+			if (score > max) {
+				max = score;
+				bestMove = moves.get(i);
+			}
+		}
+		
+		doThis = bestMove;
+		
+		return max;
+	}
+	
+	// learning part of the AI
+	
+	public double[] learning()
+	{
+		ArrayList<int[]> prevMoves = getMoveSequence(game);
+		
+		//System.out.println("PREV:" + prevMoves.size());
+		
+		//reset tree on first move
+		if (prevMoves.size() < 2) {
+			iter = tree;
+		}
+		
+		if (iter == null) {
+			////randomMove();
+			return null;
+		}
+		
+		// move through the opponents move in the tree iterator
+		if (!prevMoves.isEmpty()) {
+			int[] moveSequence = prevMoves.get(prevMoves.size() - 1);
+			
+			moveSequence = game.flipToPlayer1(moveSequence);
+			
+			boolean found = false;
+			
+			//System.out.println("\nNot sure: " + Arrays.toString(moveSequence));
+			//printTree(iter, 2);
+			
+			ArrayList<Tree<TreePair>> children = iter.getChildren();
+	
+			for (int c = 0; c < children.size(); c++) {
+				Tree<TreePair> child = children.get(c);
+		
+				if (Arrays.equals(moveSequence, child.getData().moveSequence)) {
+					iter = child;
+					found = true;
+					//System.out.println("Passed it on to " + Arrays.toString(child.getData().moveSequence));
+					break;
+				}
+			}
+		
+			// if no path exists, just set the iterator to null
+			if (!found) {
+				iter = null;
+				////randomMove();
+				//System.out.println("Never passed");
+				return null;
+			}
+		}
+		
+		ArrayList<Tree<TreePair>> children = iter.getChildren();
+		
+		if (children.isEmpty()) {
+			////randomMove();
+			return null;
+		} else {
+			// choose the best move (minimax perhaps)
+			double max = 0.0;
+			int selected = -1;
+			
+			double[] weightArray = new double[children.size()];
+			
+			for (int c = 0; c < children.size(); c++) {
+				Tree<TreePair> child = children.get(c);
+				double weight = child.getData().weight;// + rand.nextDouble() * 0.1;
+				
+				weightArray[c] = weight;
+				
+				if (weight > max) {
+					max = weight;
+					selected = c;
+				}
+			}
+			
+			// if all of the moves had a negative hei
+			if (selected == -1) {
+				
+				////randomMove();
+				return null;
+			}
+			
+			//System.out.print("Following previous Path: ");
+			
+			iter = children.get(selected);
+			
+			//System.out.println(Arrays.toString(iter.getData().moveSequence));
+			//printTree(iter, 3);
+			doThis = iter.getData().moveSequence;
+			
+			if (getPlayerID() == KalahGame.PLAYER_1 && doThis[0] > 6) {
+				doThis = game.flipToPlayer1(doThis);
+			} else  if (getPlayerID() == KalahGame.PLAYER_2 && doThis[0] < 7) {
+				doThis = game.flipToPlayer1(doThis);
+			}
+			
+			return weightArray;
+			
+			//System.out.println(Arrays.toString(doThis));
+		}
+	}
+	
+	
+	
+	public void generateTree(KalahGame cur, double originalWeight, boolean endgameCalculation)
+	{
+		ArrayList<int[]> originalPrevMoves = getMoveSequence(cur);
+		
 		// flip the tree if PLAYER_2 started
 		ArrayList<int[]> prevMoves;
 		
-		if (game.getStartingPlayerID() == KalahGame.PLAYER_1) {
+		if (cur.getStartingPlayerID() == KalahGame.PLAYER_1) {
 			prevMoves = originalPrevMoves;
 		} else {
 			prevMoves = new ArrayList<int[]>(originalPrevMoves.size());
 			
 			// create opposite prev moves
 			for (int i = 0; i < originalPrevMoves.size(); i++) {
-				prevMoves.add(game.flipToPlayer1(originalPrevMoves.get(i)));
+				prevMoves.add(cur.flipToPlayer1(originalPrevMoves.get(i)));
 			}
+		}
+		
+		if (endgameCalculation) {
+			// apply the algorithm to the endgame
+			// playout some endgame scenarios at that place
+		
+			//play(prevMoves);
+			return;
 		}
 		
 		Tree<TreePair> current = tree;
 		
-		int player = game.getStartingPlayerID();
+		int player = cur.getStartingPlayerID();
 		
 		for (int i = 0; i < prevMoves.size(); i++) {
 			double weight;
@@ -419,7 +364,7 @@ public class ROCK extends AIBase //Random Ostrich Carrot Kake
 			}
 			
 			if (!found) {
-				Tree newTree = new Tree<TreePair>(current, new TreePair(prevMoves.get(i), weight));
+				Tree<TreePair> newTree = new Tree<TreePair>(current, new TreePair(prevMoves.get(i), weight));
 				
 				current = newTree;
 			}
@@ -430,22 +375,67 @@ public class ROCK extends AIBase //Random Ostrich Carrot Kake
 				player = KalahGame.PLAYER_1;
 			}
 		}
+	}
+	
+	/*void play(ArrayList<int[]> prevMoves)
+	{
+		//replay previous moves upto a point
+		KalahGame cur = new KalahGame(game.getStartingPlayerID());
 		
-		ArrayList<Tree<TreePair>> children = tree.getChildren();
-		
-		
-		/*for (int c = 0; c < children.size(); c++) {
-			Tree<TreePair> child = children.get(c);
-			System.out.println(Arrays.toString(child.getData().moveSequence) + " : " + child.getData().weight);
+		//remove last 3 moves
+		for (int i = 0; i < 1; i++) {
+			if (prevMoves.isEmpty()) {
+				break;
+			}
+			prevMoves.remove(prevMoves.size() - 1);
 		}
 		
-		children = children.get(0).getChildren();
+		for (int i = 0; i < prevMoves.size(); i++) {
+			int[] move = prevMoves.get(i);
 		
-		for (int c = 0; c < children.size(); c++) {
-			Tree<TreePair> child = children.get(c);
-			System.out.println("+++" + Arrays.toString(child.getData().moveSequence) + " : " + child.getData().weight);
-		}*/
-	}
+			cur = cur.getState(move);
+		}
+		
+		//
+		
+		ArrayList<KalahGame> frontier = new ArrayList<KalahGame>();
+		
+		ArrayList<int[]> moves = cur.getAllowedMoveSequences(cur.getTurn());
+				
+		for (int i = 0; i < moves.size(); i++) {
+			frontier.add(cur.getState(moves.get(i)));
+		}
+		
+		int iterations = 0;
+		
+		while (!frontier.isEmpty() && iterations++ < 10) {
+			ArrayList<KalahGame> newFrontier = new ArrayList<KalahGame>();
+			
+			for (int i = 0; i < frontier.size(); i++) {
+				KalahGame next = frontier.get(i);
+				
+				moves = next.getAllowedMoveSequences(next.getTurn());
+				
+				if (moves.isEmpty()) {
+					//get score
+					int score = cur.getSeeds(6) - cur.getSeeds(13);
+					
+					if (score != 0) {
+						//add path to tree
+						generateTree(next, score > 0 ? 1.0 : -1.0, false);
+					}
+				} else {
+					for (int j = 0; j < moves.size(); j++) {
+						newFrontier.add(next.getState(moves.get(j)));
+					}
+				}
+			}
+			
+			frontier = newFrontier;
+		}
+		
+		//generateTree(ArrayList<int[]> originalPrevMoves, 0.1, false);
+	}*/
 	
 	private int getNodeDepth(Tree<TreePair> cur)
 	{
@@ -473,10 +463,41 @@ public class ROCK extends AIBase //Random Ostrich Carrot Kake
 			printTree(children.get(i), depth - 1);
 		}
 	}
-
+	
+	/**
+	The heart of the AI, where a sequence of moves is generated
+	*/
+	public int makeMove()
+	{
+		if (toMove.isEmpty()) {
+			if (maxDepth > 0) {
+				maxi(game, maxDepth);
+			} else {
+				double[] weights = learning();
+				
+				if (weights == null) {
+					/*randomMove();*/maxi(game, 4);
+				} 
+			}
+			
+			for (int i = 0; i < doThis.length; i++) {
+				toMove.add(doThis[i]);
+			}
+		}
+		
+		System.out.println(game);
+		System.out.println("ROCK " + getPlayerID() + "'s move: " + Arrays.toString(getAllowedMoves()) + ": " + toMove.get(0));
+		
+		//System.out.println("ROCK's move" + toMove.get(0));
+		
+		//printTree(tree, 5);
+		
+		return toMove.remove(0);
+	}
+	
 	public void win()
 	{
-		ArrayList<int[]> sequence = getMoveSequence();
+		ArrayList<int[]> sequence = getMoveSequence(game);
 		
 		for (int i = 0; i < sequence.size(); i++) {
 			System.out.print(java.util.Arrays.toString(sequence.get(i)) + " ");
@@ -484,12 +505,12 @@ public class ROCK extends AIBase //Random Ostrich Carrot Kake
 		
 		System.out.println();
 		
-		createTree(sequence, 1.0);
+		generateTree(game, 1.0, false);
 	}
 	
 	public void lose()
 	{
-		ArrayList<int[]> sequence = getMoveSequence();
+		ArrayList<int[]> sequence = getMoveSequence(game);
 		
 		for (int i = 0; i < sequence.size(); i++) {
 			System.out.print(java.util.Arrays.toString(sequence.get(i)) + " ");
@@ -497,7 +518,7 @@ public class ROCK extends AIBase //Random Ostrich Carrot Kake
 		
 		System.out.println();
 		
-		createTree(sequence, -1.0);
+		generateTree(game, -1.0, false);
 	}
 	
 	private class TreePair

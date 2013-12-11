@@ -26,7 +26,7 @@ public class Test {
 				case 2: player2Wins++; firstPlayer.lose(); secondPlayer.win();	break;
 			}
 			
-			//System.out.println(game);
+			System.out.println(game);
 		}
 		
 		System.out.println("---Results---");
@@ -47,13 +47,5 @@ public class Test {
 		AIBase secondPlayer = new MASH(game, KalahGame.PLAYER_2);
 		
 		pit(game, firstPlayer, secondPlayer);
-
-		/*
-		MASH test = new MASH(game, KalahGame.PLAYER_1);
-		
-		Tree<KalahGame> t = new Tree<KalahGame>(null, game);
-		test.createTree(1, t);
-		System.out.println(t);
-		*/
 	}
 }
