@@ -8,7 +8,7 @@ import java.util.Comparator;
 public class MASH extends AIBase
 {
 	private Map<GameState, ProbArray> memory;
-	private ArrayList<CrappyPair> currentGame;
+	private ArrayList<StatePair> currentGame;
 	private Random r;
 
 	private static final int PROB_DELTA = 50;
@@ -19,13 +19,13 @@ public class MASH extends AIBase
 		super(g, playerID);
 
 		memory = new HashMap<GameState, ProbArray>();
-		currentGame = new ArrayList<CrappyPair>();
+		currentGame = new ArrayList<StatePair>();
 		r = new Random();
 		
 	}
 
 	public void win() {
-		for(CrappyPair p : currentGame) {
+		for(StatePair p : currentGame) {
 			memory.get(p.state).updateProbability(p.choice, PROB_DELTA);
 		}
 
@@ -34,7 +34,7 @@ public class MASH extends AIBase
 	}
 
 	public void lose() {
-		for(CrappyPair p : currentGame) {
+		for(StatePair p : currentGame) {
 			memory.get(p.state).updateProbability(p.choice, -PROB_DELTA);
 		}
 
@@ -97,7 +97,7 @@ public class MASH extends AIBase
 		}
 
 		i = (i >= moves.length ? i - 1 : i);
-		currentGame.add(new CrappyPair(s, i));
+		currentGame.add(new StatePair(s, i));
 		
 		return moves[i];
 	}
@@ -228,11 +228,11 @@ private class ProbArray {
 	}
 }
 
-private class CrappyPair {
+private class StatePair {
 	public GameState state;
 	public int choice;
 
-	public CrappyPair(GameState state, int choice) {
+	public StatePair(GameState state, int choice) {
 		this.state = state;
 		this.choice = choice;
 	}
