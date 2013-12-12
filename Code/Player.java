@@ -45,7 +45,6 @@ public class Player extends AIBase {
 		return false;
 	}
 	
-	
 	public int makeMove()
 	{
 		System.out.println(game);
