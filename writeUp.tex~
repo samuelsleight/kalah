@@ -1,4 +1,4 @@
-% Created 2013-12-12 Thu 01:15
+% Created 2013-12-11 Wed 20:07
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -44,53 +44,43 @@ We used GitHub as version control. The repository can be found here - \url{https
 
 The results of our 1000 games were -
 
-AI 1 - Helen \& Amar's - 35522 seeds acquired
+AI 1 - Helen \& Amar's - 989/1000 wins
 
-AI 2 - Sam \& Andrew's - 12478 seeds acquired
+AI 2 - Sam \& Andrew's - 10/1000 wins
+
+There was also 1 draw.
 \section{ROCK Algorithm - By Helen and Amar}
 \label{sec-2}
 
 \subsection{Basis}
 \label{sec-2-1}
 
-The basis of this agent is the minimax algorithm, which is a staple AI algorithm for logic games. The minimax algorithm is a popular algorithm that is used in two-player games such as chess and tic-tac-toe (or “full-information” games) because you can see all of the possible options that you or your opponent can make.  This helps to represent the game as a search tree of sorts, with the levels of the tree alternating between player 1’s and player 2’s available moves. The aim of the algorithm is to ‘maximise’ your options whilst ‘minimising’ the opponent’s, in order to (hopefully) find a winning solution.
-To improve the basic minimax algorithm, a method of learning is applied and combined with minimax to make the AI smarter by learning winning/losing strategies in looped game sequences. The learning method is detailed in the next section.
-The minimax algorithm is fairly simple to implement and quite effective, but it isn’t the best algorithm out there. I referred to the lecture notes in AdversarialSearch.pdf on Canvas for the base algorithm. We looked at and modified the implementation slightly from \url{http://chessprogramming.wikispaces.com/Minimax}.
-\subsection{Learning Theory}
+The basis of this algorithm is the minimax algorithm, which is a staple AI algorithm for logic games. The minimax algorithm is a popular algorithm that is used in two-player games such as chess and tic-tac-toe because you can see all of the possible options that you or your opponent can make. (Otherwise known as ‘full-information’ games.)  This helps to represent the game as a search tree of sorts, with the levels of the tree alternating between player 1’s and player 2’s available moves. The aim of the algorithm is to ‘maximise’ your options whilst ‘minimising’ the opponent’s, in order to (hopefully) find a winning solution.
+
+The algorithm is fairly simple to implement, but it isn’t the best algorithm out there. (I referred to the lecture notes only in AdversarialSearch.pdf, but it is well-documented in literature normally.) ]
+\subsection{Learning}
 \label{sec-2-2}
 
-Not sure if there is a known name for this algorithm, or if there is anything similar to it, but since we managed to come up with it ourselves, here is a detailed explanation on how it works.
-The agent condenses all of its and its opponent’s past moves into a tree. The root of the tree represents the initial state of the Kalah board. From there, its children contain actions in the form of move sequences. The tree doesn't store the states of the board, just the actions from one state to the next. Keeping the state of the board as well isn't really necessary, since it can be generated via the KalahGame.getState methods.
-Each node also stores weights that are associated with each move. These weights score how successful that particular node has been in the past. If a node already exists in the tree, then only its weight needs to be modified.
-As an example of how this works in practice, say that at a conclusion of a certain game, Player 1 wins. Then all the moves that Player 1 took are added to the tree, and their weights are increased by 1. Since Player 2 lost, all of Player 2's moves are also added to the tree, but this time their weights are decreased by 1 instead. NOTE: When move sequences are added to the tree, sometimes the moves have to be converted from Player 2 to Player 1, as the tree always assumes that Player 1 starts.
-We ignore the case when the agent and its opponent draw. From a draw, we cannot determine if the move sequence that either player took was optimal. Therefore no changes are made to the tree.
-After a couple of games, this tree starts to give the agent a good indication of what move it should take, based on past experiences. Nodes with high scores indicate a good path for the agent to take, while nodes with negative scores should be avoided.
-When the agent is running, it traverses down the tree according to the moves the opponent has made. Especially at the start, these moves are not actually in the tree. When we have no knowledge of how effective a move has been in the past, we just use minimax to find the next move. NOTE: There is also a flag to disable minimax in our algorithm, and use random moves instead.
-If however the agent does find a node for its current move, it knows that the path has been previously traversed. It can then check the weight of that node’s children to determine its next move. If there is a child that has a non-negative weight, the AI will follow it down by performing the action specified by that node. In the case that there are multiple children, it picks the node with the highest weight.
+(As explained to me earlier, may need tweaking.) In every game, a search tree of possible moves up to a certain depth is created, and the AI stores the path that it takes. Every possible state has a value attached to it, and this value is the heuristic (I think?) that determines how likely the AI will choose that move. At the end of the game, the AI adds a value to the path taken depending on the outcome of the game. If the path was a winning solution, a positive value is added to all of the states in the search tree of the next game, so that it is more likely to choose said states. (And vice versa for a losing solution.) If a number of states have the same highest-weighted values, then one state out of those is randomly picked to be the next move. We thought it wasn’t in our best interests to create another search tree from those states (minimax-ing the minimax, woahhh), so it saves time.
 \subsection{Efficiency}
 \label{sec-2-3}
 
-When implementing minimax, alpha-beta pruning is utilised to help make the algorithm slightly more efficient. Using the method of comparing values of each state, on the agent’s turn, if one state’s value is lower than a certain value then that branch of the tree is terminated as it is unlikely to provide a good outcome. (And likewise for the opponent’s moves.) We considered this but due to time constraints, we could not implement it in the end.
-The algorithm also takes a value for the max depth of the tree to be searched. The higher this value is, the further ahead the agent can search, but also the longer it takes to decide on its next move. Since the time complexity of a search tree is dependent on the depth of the tree searched, a suitable value is needed to balance efficiency and effectiveness. 
-In theory, the minimax algorithm will give you a perfect sequence of move for a game. In practice however, it isn't that simple. For games such as draughts and Kalah, generating every single possible game isn't practical. Instead, we had to limit the depth to just 4 turns. The algorithm actually ran in reasonable time even with a depth of 7, but for some reason a depth of 4 always seemed to win against every depth below 8. We aren't actually why this actually is, but we know that the other team also encountered this. This suggests that perhaps it is something to do with our heuristic (since we all used the same heuristic), rather than our implementation.
-\subsection{Analysis (via Testing)}
+Alpha-beta pruning is utilised (Amar said he would implement it, did he?) to help make the algorithm slightly more efficient. Using the heuristic of comparing values of each state (again, not sure on actual heuristic), on the AI’s turn, if one state’s value is lower than a certain value (or was it compared against the other states?) then that branch of the tree is terminated as it is unlikely to provide a good outcome. (And likewise for the opponent’s moves.)
+The algorithm also takes a value for the max depth of the tree to be searched. The higher this value is, the further ahead the AI can search, but also the longer it takes to decide on its next move. Since the time complexity of a search tree is dependent on the depth of the tree searched, a suitable value is needed to balance efficiency and effectiveness. We found that searching up to five levels returned results in a reasonable amount of time.
+\subsection{Testing}
 \label{sec-2-4}
 
-We ran various tests to see how our agent would perform. To test, we set our agent to be player 1 and some other AI to be player 2, ran 1000 games between the two and returned the number of wins, losses and draws, as well as the final state of the game board in every game.
-With a random AI, the win/loss ratio was mostly evenly split at about a \textasciitilde{}51\% win rate because the chance of any of the opponent’s moves being optimal is very low as it is random. This makes it very difficult for our agent to learn from.
-Next we tested it against the normal minimax algorithm. Again, the win/loss ratio was fairly even at \textasciitilde{}51\%, but on rare occasions the agent would adapt so well that it won nearly every game and had a \textasciitilde{}98\% win rate.
-After combining minimax with our learning method, we ran it against just minimax. The result was an even 50\% win ratio. This was expected since playing against minimax essentially reduces our combined AI into one as well, and the winner of the match was determined by who played first.
-Finally we tried running combined minimax/learning against just the learning algorithm. Again the win/loss ratio was \textasciitilde{}50\% but the learning on its own would win a few games more than the combined AI. This somewhat makes sense that the outcome is even since at the heart of it, the combined AI is minimax and from that, both algorithms would learn from it, thus staying fairly equal to each other.
+We did various tests to see how the AI would perform. With a random AI, the win/loss ratio was mostly evenly split because the chance of any of the opponent's moves being optimal is very low as it is random. This makes it very difficult for our AI to learn from.
+Next we tested it against the normal minimax algorithm. Again, the win/loss ratio was fairly even, but sometimes the AI would adapt so well that it won nearly every game. (Why did this even happen.)
+(Next test(s): Combined minimax/learning  vs  minimax and combined minimax/learning vs learning)
 \subsection{Expectations}
 \label{sec-2-5}
 
-We expected our agent to win more games than the opponent but have the win/loss ratio be fairly even. This is because the AI tries to use the winning moves of both players against the opponent to keep a lead. When no information is present, for example at the start of the first game, the agent will choose its moves randomly, but for the next game onwards, it starts to utilise learning in order to gain a lead. 
-Since we know that the other agent will also utilise the minimax algorithm, we should expect to have a fairly even win/loss ratio. This is mainly because of the fact that minimax algorithms tend to produce a small number of different paths, compared to say a random algorithm. This implies that our learning algorithm will quickly pick up on the optimal paths it takes, and use those paths against it.
-Our tests have shown that when our learning algorithm on its own plays against a minimax algorithm, the learning algorithm can actually outperform the minimax algorithm. We think that was because it chose random moves when it hadn't previously explored the current path. Without this randomness though, we think that the outcome of making the two agent’s play each other repeatedly should be a 50\% win/loss ratio, because of the use of minimax in both agent ‘s.
+We expect the AI to win more games than the opponent (KD + 1) but have the win/loss ratio be fairly even. This is because the AI tries to use the winning moves of both players against the opponent to keep a lead. When no information is present, the AI will choose its moves randomly.
 \subsection{Analysis}
 \label{sec-2-6}
-Our agent performed far better than originally expected, with an average win rate of \textasciitilde{}99\%. Whilst our agent was minimax with our own devised learning algorithm, the other team’s agent was also minimax but with probabilistic learning instead. Since we expected our agent to be just slightly better than average against minimax, this startling disparity indicates that the implementation of the other team’s agent (whether it was the base algorithm or the learning itself) was not correct at some points. 
-Since learning alone wouldn't give such a one-sided result, I think that the minimax implementation on the other team’s side failed to match up against our minimax implementation. If they had been equal, then the difference between our scores may have been much smaller.
+
+Anal-y-sis
 \section{MASH Algorithm - By Sam and Andrew}
 \label{sec-3}
 
