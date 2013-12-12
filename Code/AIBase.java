@@ -31,5 +31,4 @@ public abstract class AIBase {
 	{
 		playerID = id;
 	}
-
 }
