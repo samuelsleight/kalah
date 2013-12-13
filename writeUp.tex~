@@ -1,4 +1,4 @@
-% Created 2013-12-13 Fri 00:32
+% Created 2013-12-13 Fri 00:29
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -48,7 +48,7 @@ AI 1 - Helen \& Amar's - 35522 seeds acquired
 
 AI 2 - Sam \& Andrew's - 12478 seeds acquired
 
-A text file containing a full log of every game (of the 1000) and a summary is included in the file 'Results.txt'.
+A full log of every game and a summary is included in the file 'Results.txt'.
 \section{ROCK Algorithm - By Helen and Amar}
 \label{sec-2}
 

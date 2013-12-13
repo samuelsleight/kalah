@@ -10,7 +10,7 @@ We had both of our AI extend a class called AIBase, which get passed into the pl
 
 After constructing the infrastructure of the game and whatnot, including the base AI class and all of the plumbing for making sure everything connects properly, we went off into our subgroups and made out individual AI which extend the abstract AIBase class. Needless to say, the methods (such as playGame) take an object of type AIBase, which meant we could do all of the game together before we'd made our AI, utilising abstract classes and methods to denote what each AI should have, such as a win/lose method, which each learning algorithm could take and learn from.
 
-We both did have similar ideas in regards to usage of algorithms, and we shared resources found, and ideas about our AI - and there were some cases where methods were useful for both parties, so were put outside the individual AI class, and shared the method for usage in both of our AI, to save time and keep relative concurrence as far as how the AI works is concerned. Despite creating both of AI separately, sharing ideas wasn't something we shied away from. We did share the idea in essence, however, of extending something like min-max with learning, to make up for the part you cannot search down, and combining the best of both paradigms of AI - an idea based on having learning filling in the gaps where search cannot reach due to very high complexity. Shared ideas such as this one were generally shared between us, and we talked about this a lot whilst we didn't have lectures, and had a Facebook group for when we wanted to share ideas or communicate things online.
+We both did have similar ideas in regards to usage of algorithms, and we shared resources found, and ideas about our AI - and there were some cases where methods were useful for both parties, so were put outside the individual AI class, and shared the method for usage in both of our AI, to save time and keep relative concurrence as far as how the AI works is concerned. Despite creating both of AI separately, sharing ideas wasn't something we shied away from. We did share the idea in essence, however, of extending something like min-max with learning, to make up for the part you cannot search down, and combining the best of both paradigms of AI - an idea based on having learning filling in the gaps where search cannot reach due to very high complexity. Shared ideas such as this one were generally shared between us, and we talked about this a lot whilst we didn't have lectures, and had a Facebook group for when we wanted to share ideas or communicate.
 
 We used GitHub as version control. The repository can be found here - https://github.com/YeyaSwizaw/kalah. We found this was the easiest way to collaborate as a group to create coherent code that meshed well with each other, even despite it not being coded all by one person. This is a lot more efficient and sensible than simply having a dropbox folder, we found, as it's less fiddling around. This made it extremely easy to download the repository from any machine, and push changes from anywhere, without any re-downloading of single files or one zip.
 
@@ -19,6 +19,8 @@ The results of our 1000 games were -
 AI 1 - Helen & Amar's - 35522 seeds acquired
 
 AI 2 - Sam & Andrew's - 12478 seeds acquired
+
+A text file containing a full log of every game (of the 1000) and a summary is included in the file 'Results.txt'.
 
 * ROCK Algorithm - By Helen and Amar
 
